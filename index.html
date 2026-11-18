@@ -192,6 +192,7 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
 .instalar img { width: 48px; height: 48px; border-radius: 11px; grid-row: span 2; }
 .instalar b { font-size: 17px; font-weight: 600; color: var(--tinta); }
 .instalar span { font-size: 15px; line-height: 1.4; color: var(--tinta-2); }
+.instalar a.boton { grid-column: 1 / -1; margin-top: 8px; text-align: center; text-decoration: none; font: 600 17px var(--f-texto); color: var(--sobre-acento); background: var(--acento); border-radius: 12px; padding: 12px 16px; }
 .instalar button { grid-column: 1 / -1; margin-top: 8px; font: 600 17px var(--f-texto); color: var(--sobre-acento); background: var(--acento); border: 0; border-radius: 12px; padding: 12px 16px; cursor: pointer; }
 </style>
 </head>
@@ -211,7 +212,9 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
     <span id="i-ios">Pulsa Compartir y luego «Añadir a pantalla de inicio». Ábrela siempre desde el icono para no perder tu progreso.</span>
     <span id="i-android">Menú ⋮ del navegador → «Instalar app» o «Añadir a pantalla de inicio». Funciona sin conexión.</span>
     <span id="i-pc">Tenla como una app más en este ordenador. Funciona sin conexión.</span>
+    <span id="i-dentro" hidden></span>
     <button type="button" id="i-boton" hidden>Instalar</button>
+    <a id="i-abrir" class="boton" hidden>Abrir en Chrome</a>
   </section>
   
 
@@ -226,7 +229,7 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
   </footer>
 </div>
 
-<script src="banco.js?v=c20f877cfa"></script>
+<script src="banco.js?v=d54129f94d"></script>
 <script>
 (() => {
   const B = window.BANCO;
@@ -620,11 +623,26 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
   let instalada = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
   const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   const android = /Android/i.test(navigator.userAgent);
-  $("i-ios").hidden = !ios; $("i-android").hidden = !android; $("i-pc").hidden = ios || android;
+  // Dentro del navegador de otra app (enlace abierto desde Instagram, Facebook, Telegram…) no se puede instalar: hay que abrirla en el navegador.
+  const ua = navigator.userAgent;
+  const app = /Instagram/i.test(ua) ? "Instagram" : /FBAN|FBAV|FB_IAB|FBIOS|Messenger/i.test(ua) ? "Facebook" : /Telegram/i.test(ua) ? "Telegram"
+    : /LinkedInApp/i.test(ua) ? "LinkedIn" : /musical_ly|BytedanceWebview|TikTok/i.test(ua) ? "TikTok" : /\bLine\//.test(ua) ? "LINE"
+    : (android && /; wv\)/.test(ua)) ? "otra app" : "";
+  $("i-ios").hidden = !ios || !!app; $("i-android").hidden = !android || !!app; $("i-pc").hidden = ios || android || !!app;
+  if (app) {
+    $("i-dentro").hidden = false;
+    $("i-dentro").textContent = `La has abierto dentro de ${app === "otra app" ? "otra app" : app}: desde aquí no se puede instalar. `
+      + (ios ? "Toca el menú (··· o el icono de compartir) y elige «Abrir en Safari»." : "Toca el menú ⋮ y elige «Abrir en Chrome» o «Abrir en el navegador».");
+    if (android) {  // en Android, un botón que la abre directamente en Chrome
+      const a = $("i-abrir"), url = location.href.replace(/^https?:\/\//, "");
+      a.href = "intent://" + url + "#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=" + encodeURIComponent(location.href) + ";end";
+      a.hidden = false;
+    }
+  }
   let aviso = null;
-  const actualizar = () => { caja.hidden = instalada || !document.querySelector("#vista .inicio") || !(ios || android || aviso); };
+  const actualizar = () => { caja.hidden = instalada || !document.querySelector("#vista .inicio") || !(ios || android || aviso || app); };
   new MutationObserver(actualizar).observe($("vista"), { childList: true });
-  addEventListener("beforeinstallprompt", e => { e.preventDefault(); aviso = e; boton.hidden = ios; actualizar(); });
+  addEventListener("beforeinstallprompt", e => { e.preventDefault(); aviso = e; boton.hidden = ios || !!app; actualizar(); });
   boton.addEventListener("click", async () => { if (!aviso) return; aviso.prompt(); await aviso.userChoice; aviso = null; boton.hidden = true; });
   addEventListener("appinstalled", () => { instalada = true; actualizar(); });
   actualizar();

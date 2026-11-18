@@ -1,6 +1,6 @@
 // Generado por scripts/web.py. Cambia de versión con cada publicación y descarta la caché anterior.
-const CACHE = "openoposiciones-c20f877cfa";
-const PRECACHE = ["./", "index.html", "banco.js?v=c20f877cfa", "privacidad.html", "como-funciona.html", "manifest.webmanifest", "iconos/apple-touch-icon.png", "iconos/favicon-32.png", "iconos/icono-192.png", "iconos/icono-512.png"];
+const CACHE = "openoposiciones-d54129f94d";
+const PRECACHE = ["./", "index.html", "banco.js?v=d54129f94d", "privacidad.html", "como-funciona.html", "manifest.webmanifest", "iconos/apple-touch-icon.png", "iconos/favicon-32.png", "iconos/icono-192.png", "iconos/icono-512.png"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
 });
