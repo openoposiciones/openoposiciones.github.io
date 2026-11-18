@@ -5,7 +5,7 @@ Test gratuito con preguntas oficiales de exámenes de oposición de Fisioterapia
 - **Web:** https://openoposiciones.github.io
 - **Cómo funciona** (de dónde salen las preguntas, cómo se decide la relevancia, dónde se guarda tu progreso): https://openoposiciones.github.io/como-funciona.html
 - **Privacidad:** no se recoge ningún dato; el progreso se queda en el dispositivo de cada persona.
-- **Contacto:** openoposiciones (arroba) gmail (punto) com
+- **Contacto:** openoposiciones@gmail.com
 
 Web independiente, sin relación con el SERMAS ni con ninguna administración. Las respuestas son las de la plantilla oficial de cada tribunal, sin revisar.
 
