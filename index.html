@@ -184,7 +184,7 @@ footer a { color: var(--acento); }
     </footer>
 </div>
 
-<script src="banco.js?v=de0085dac1"></script>
+<script src="banco.js?v=987cf17294"></script>
 <script>
 (() => {
   const B = window.BANCO;
@@ -297,9 +297,10 @@ footer a { color: var(--acento); }
         : "Empieza por las preguntas que más se repiten en los exámenes."}</p>
       <button type="button" class="grande prim" id="estudiar"${n ? "" : " disabled"}>Estudiar<span>${a.length ? `${num(n)} preguntas con tus filtros` : "las más preguntadas primero y tus fallos"}</span></button>
       <button type="button" class="grande sec" id="filtrar">Filtrar<span>${a.length ? esc(a.join(" · ")) : "tema, convocatoria, año o palabra"}</span></button>
-      <p class="mas"><button type="button" class="enlace" id="ir-sim">Simulacro de examen</button><button type="button" class="enlace" id="ir-prog">Mi progreso</button></p>
+      <p class="mas"><button type="button" class="enlace" id="ir-azar">Estudiar al azar</button><button type="button" class="enlace" id="ir-sim">Simulacro de examen</button><button type="button" class="enlace" id="ir-prog">Mi progreso</button></p>
     </section>`);
-    $("#estudiar").addEventListener("click", estudiar);
+    $("#estudiar").addEventListener("click", () => estudiar());
+    $("#ir-azar").addEventListener("click", () => estudiar(true));
     $("#filtrar").addEventListener("click", filtrarVista);
     $("#ir-sim").addEventListener("click", simulacro);
     $("#ir-prog").addEventListener("click", progreso);
@@ -338,14 +339,15 @@ footer a { color: var(--acento); }
     };
     ["#f-tema", "#f-org", "#f-desde", "#f-hasta", "#f-nuevas", "#f-fallos", "#f-general"].forEach(s => $(s).addEventListener("change", leer));
     $("#f-texto").addEventListener("input", leer);
-    $("#f-ir").addEventListener("click", estudiar);
+    $("#f-ir").addEventListener("click", () => estudiar());
     $("#f-quitar").addEventListener("click", () => { filtro = { ...SIN_FILTRO }; guardarFiltro(); filtrarVista(); });
     act();
   }
 
   // ---------- estudiar: preguntas sin fin ----------
   // Primero las más preguntadas que no has visto; cada pocas, una que fallaste hace un rato; cuando ya las has visto todas, las que peor llevas.
-  function estudiar() {
+  // alAzar: cualquier pregunta del banco (con los filtros), sin el orden de relevancia
+  function estudiar(alAzar = false) {
     const pool = barajar(filtrar()).sort((a, b) => b.rel - a.rel);
     if (!pool.length) return inicio();
     const recientes = [];
@@ -354,6 +356,7 @@ footer a { color: var(--acento); }
       const libre = q => !recientes.includes(q.id);
       const toca = q => fallada(q.id) && libre(q) && (est.n || 0) - (est.q[q.id][3] || 0) >= 6;
       if (!filtro.fallos && Math.random() < 0.3) { const f = pool.filter(toca); if (f.length) return azar(f); }
+      if (alAzar) { const c = pool.filter(q => libre(q) && (!filtro.nuevas || !est.q[q.id]) && (!filtro.fallos || fallada(q.id))); return c.length ? azar(c) : null; }
       const nueva = pool.find(q => !est.q[q.id] && libre(q));
       if (nueva) return nueva;
       if (filtro.nuevas) return null;
