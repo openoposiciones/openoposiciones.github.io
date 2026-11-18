@@ -226,7 +226,7 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
   </footer>
 </div>
 
-<script src="banco.js?v=aa04d1bae3"></script>
+<script src="banco.js?v=c20f877cfa"></script>
 <script>
 (() => {
   const B = window.BANCO;
@@ -358,8 +358,8 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
       <p class="estado"${vistas ? "" : " hidden"}>${vistas
         ? `Llevas <b>${num(vistas)}</b> preguntas · <b>${Math.round(100 * ac / tot)} %</b> de aciertos${nt ? ` · <b>${num(nt)}</b> para repasar hoy` : ""}`
         : ""}</p>
-      <button type="button" class="grande prim" id="estudiar">Estudiar<span>${nt ? `tus ${num(nt)} repasos de hoy y preguntas nuevas` : "primero lo que más cae en SERMAS, y tus fallos"}</span></button>
-      <button type="button" class="grande sec" id="filtrar">Filtrar<span>tema, convocatoria, año o palabra</span></button>
+      <button type="button" class="grande prim" id="estudiar">Estudiar<span>${nt ? `tus ${num(nt)} repasos de hoy y preguntas nuevas` : "primero tus fallos y lo que más cae en el SERMAS"}</span></button>
+      <button type="button" class="grande sec" id="filtrar">Filtrar<span>personaliza tu estudio</span></button>
       ${favs.length ? `<div class="favs" aria-label="Filtros favoritos">${favs.map((f, i) => { const m = filtrar(f).length;
         return `<div class="fav-fila"><button type="button" class="fav" data-i="${i}"${m ? "" : " disabled"}><span class="estrella" aria-hidden="true">★</span><span class="fav-n">${esc(activos(f).join(" · "))}</span><span class="fav-c">${num(m)}</span></button><button type="button" class="fav-x" data-i="${i}" aria-label="Quitar de favoritos">×</button></div>`; }).join("")}</div>` : ""}
       <p class="mas"><button type="button" class="enlace" id="ir-azar">Estudiar al azar</button><button type="button" class="enlace" id="ir-sim">Simulacro de examen</button><button type="button" class="enlace" id="ir-prog">Mi progreso</button></p>
