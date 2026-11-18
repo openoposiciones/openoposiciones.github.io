@@ -1,13 +1,13 @@
 {
- "name": "OpenOposiciones · Fisioterapia",
+ "name": "OpenOposiciones · Fisioterapia SERMAS 2026",
  "short_name": "OpenOposiciones",
  "lang": "es",
- "description": "Preguntas oficiales de exámenes de oposición de Fisioterapia, con la respuesta de la plantilla oficial.",
+ "description": "Test para la OPE de Fisioterapia del SERMAS 2026 con preguntas oficiales de exámenes de oposición y la respuesta de la plantilla oficial.",
  "start_url": "./",
  "scope": "./",
  "display": "standalone",
- "background_color": "#f6f7f4",
- "theme_color": "#f6f7f4",
+ "background_color": "#ffffff",
+ "theme_color": "#ffffff",
  "icons": [
   {
    "src": "iconos/icono-192.png",

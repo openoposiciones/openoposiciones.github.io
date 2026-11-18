@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://openoposiciones.goatcounter.com/count; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
-<meta name="theme-color" content="#f6f7f4" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#141a19" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="iconos/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="iconos/apple-touch-icon.png">
@@ -16,146 +16,166 @@
 <meta name="apple-mobile-web-app-title" content="OpenOposiciones">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="robots" content="noindex, nofollow">
-<title>OpenOposiciones · Fisioterapia</title>
+<title>OpenOposiciones · Fisioterapia SERMAS 2026</title>
 <meta name="description" content="Preguntas oficiales de exámenes de oposición de Fisioterapia (servicios de salud y otras administraciones), con la respuesta de la plantilla oficial.">
-<link rel="stylesheet" href="fonts/fonts.css">
 <style>
-/* Layout: una columna de lectura (hoja de examen) con barra de modos arriba; panel de filtros plegable. */
+/* Estilo nativo: la letra del sistema (San Francisco en iPhone, Roboto en Android), blanco y negro y un solo verde. */
 :root {
-  --papel: #f6f7f4;      /* fondo: papel de examen ligeramente verde */
-  --hoja: #ffffff;
-  --tinta: #1f2a2a;
-  --tinta-2: #55625f;
-  --linea: #d5dcd8;
-  --acento: #0f6e66;     /* verde quirófano */
-  --acento-suave: #e1efec;
-  --ok: #2e7d4f; --ok-suave: #e3f2e8;
-  --mal: #b4442f; --mal-suave: #f8e5e0;
-  --aviso: #9a6a12;
-  --f-titulo: "Fraunces", Georgia, "Times New Roman", serif;
-  --f-texto: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --f-dato: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
-  --radio: 8px;
+  --papel: #ffffff;       /* fondo */
+  --hoja: #ffffff;        /* superficies */
+  --relleno: #f2f2f7;     /* botones grises, opciones, campos */
+  --relleno-2: #e8e8ed;   /* al pulsar */
+  --tinta: #1c1c1e;
+  --tinta-2: #6e6e73;
+  --linea: #e3e3e8;
+  --acento: #1a8a4a;      /* verde salud */
+  --sobre-acento: #ffffff;
+  --acento-suave: #e6f4ec;
+  --ok: #1a8a4a; --ok-suave: #e6f4ec;
+  --mal: #d1242f; --mal-suave: #fdecec;
+  --aviso: #a05a00;
+  --f-texto: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --f-titulo: var(--f-texto);
+  --f-dato: var(--f-texto);
+  --radio: 12px;
+  color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --papel: #141a19; --hoja: #1b2321; --tinta: #e4ebe8; --tinta-2: #9fb0ab; --linea: #31403c;
-    --acento: #4fbfb2; --acento-suave: #1d3532; --ok: #6cc892; --ok-suave: #1d3326; --mal: #ec8a74; --mal-suave: #3a2420; --aviso: #e0b35c;
+    --papel: #000000; --hoja: #000000; --relleno: #1c1c1e; --relleno-2: #2c2c2e;
+    --tinta: #f5f5f7; --tinta-2: #98989f; --linea: #2c2c2e;
+    --acento: #34c46d; --sobre-acento: #00140a; --acento-suave: #0f2a1a;
+    --ok: #34c46d; --ok-suave: #0f2a1a; --mal: #ff6b6b; --mal-suave: #2e1214; --aviso: #ffb340;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --papel: #141a19; --hoja: #1b2321; --tinta: #e4ebe8; --tinta-2: #9fb0ab; --linea: #31403c;
-  --acento: #4fbfb2; --acento-suave: #1d3532; --ok: #6cc892; --ok-suave: #1d3326; --mal: #ec8a74; --mal-suave: #3a2420; --aviso: #e0b35c;
+  --papel: #000000; --hoja: #000000; --relleno: #1c1c1e; --relleno-2: #2c2c2e;
+  --tinta: #f5f5f7; --tinta-2: #98989f; --linea: #2c2c2e;
+  --acento: #34c46d; --sobre-acento: #00140a; --acento-suave: #0f2a1a;
+  --ok: #34c46d; --ok-suave: #0f2a1a; --mal: #ff6b6b; --mal-suave: #2e1214; --aviso: #ffb340;
   color-scheme: dark;
 }
-* { box-sizing: border-box; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { background: var(--papel); color: var(--tinta); }
-body { font: 16px/1.55 var(--f-texto); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 48px; }
-.envoltura { max-width: 46rem; margin: 0 auto; }
-header.cab { padding-block: 28px 12px; display: grid; gap: 6px; }
-h1 { font: 600 clamp(1.6rem, 4vw, 2.1rem)/1.15 var(--f-titulo); margin: 0; text-wrap: balance; letter-spacing: -.01em; }
-.sub { color: var(--tinta-2); margin: 0; max-width: 62ch; }
-.cifras { display: flex; flex-wrap: wrap; gap: 6px 18px; font: 500 13px var(--f-dato); color: var(--tinta-2); font-variant-numeric: tabular-nums; }
-.cifras b { color: var(--tinta); font-weight: 500; }
-
-nav.modos { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--papel); display: flex; gap: 4px; padding-block: 10px; border-bottom: 1px solid var(--linea); overflow-x: auto; }
+body { font: 17px/1.45 var(--f-texto); -webkit-font-smoothing: antialiased; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); padding-block: 0 40px; }
+.envoltura { max-width: 36rem; margin: 0 auto; }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--papel); }
-nav.modos button { font: 600 14px var(--f-texto); border: 1px solid transparent; background: none; color: var(--tinta-2); padding: 7px 12px; border-radius: 999px; cursor: pointer; white-space: nowrap; }
-nav.modos button[aria-pressed="true"] { background: var(--acento); color: var(--hoja); }
-nav.modos button:hover:not([aria-pressed="true"]) { border-color: var(--linea); color: var(--tinta); }
 
-section.panel { padding-block: 18px; display: grid; gap: 14px; }
-.filtros { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 10px 14px; }
-label.campo, div.campo { display: grid; gap: 4px; font: 600 12px var(--f-texto); letter-spacing: .04em; text-transform: uppercase; color: var(--tinta-2); }
-select, input[type="search"], input[type="number"] { font: 15px var(--f-texto); color: var(--tinta); background: var(--hoja); border: 1px solid var(--linea); border-radius: var(--radio); padding: 8px 10px; width: 100%; }
-.casillas { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 14px; color: var(--tinta-2); }
-.casillas label { display: flex; gap: 6px; align-items: center; cursor: pointer; }
-.acciones { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-button.prim, button.sec { font: 600 15px var(--f-texto); border-radius: var(--radio); padding: 10px 16px; cursor: pointer; border: 1px solid var(--acento); }
-button.prim { background: var(--acento); color: var(--hoja); }
-button.sec { background: none; color: var(--acento); }
-button:disabled { opacity: .45; cursor: default; }
+header.cab { padding-block: 24px 4px; display: grid; gap: 2px; }
+h1 { font: 700 30px/1.15 var(--f-titulo); letter-spacing: -.02em; margin: 0; }
+h2 { font: 700 22px/1.2 var(--f-titulo); letter-spacing: -.01em; margin: 0; }
+.cifras { display: flex; flex-wrap: wrap; color: var(--tinta-2); font-size: 15px; font-variant-numeric: tabular-nums; }
+.cifras span + span::before { content: "·"; margin: 0 6px; }
+.cifras b { font-weight: 400; }
+.cifras .objetivo { color: var(--tinta); font-weight: 600; }
+
+section.panel { padding-block: 16px; display: grid; gap: 14px; }
+.nota { font-size: 15px; color: var(--tinta-2); }
 :focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; }
-.nota { font-size: 13px; color: var(--tinta-2); }
+button { font-family: var(--f-texto); }
+button:disabled { opacity: .4; cursor: default; }
+
+/* inicio */
+.inicio { gap: 10px; padding-block: 12px 16px; }
+.estado { margin: 0 0 8px; color: var(--tinta-2); font-size: 15px; }
+.estado b { color: var(--tinta); font-weight: 600; }
+button.grande { position: relative; display: grid; gap: 1px; text-align: left; width: 100%; padding: 16px 44px 16px 18px; border: 0; border-radius: 14px; font: 600 20px/1.25 var(--f-texto); cursor: pointer; }
+button.grande::after { content: "›"; position: absolute; right: 18px; top: 50%; transform: translateY(-52%); font: 400 30px/1 var(--f-texto); opacity: .6; }
+button.grande span { font: 400 15px/1.35 var(--f-texto); opacity: .8; }
+button.grande.prim { background: var(--acento); color: var(--sobre-acento); }
+button.grande.sec { background: var(--relleno); color: var(--tinta); }
+button.grande.sec:active { background: var(--relleno-2); }
+.mas { display: flex; flex-wrap: wrap; gap: 4px 22px; margin: 8px 0 0; }
+button.enlace { font: 400 17px var(--f-texto); color: var(--acento); background: none; border: 0; padding: 6px 0; cursor: pointer; }
+.volver { justify-self: start; margin-left: -2px; }
+
+/* botones normales */
+.acciones { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+button.prim, button.sec { font: 600 17px var(--f-texto); border-radius: var(--radio); padding: 12px 18px; cursor: pointer; border: 0; }
+button.prim { background: var(--acento); color: var(--sobre-acento); }
+button.sec { background: var(--relleno); color: var(--tinta); }
+button.ancho { width: 100%; padding: 15px 18px; }
+
+/* filtros */
+.filtros { display: grid; gap: 14px; }
+label.campo, div.campo { display: grid; gap: 6px; font-size: 15px; color: var(--tinta-2); }
+select, input[type="search"], input[type="number"] { font: 17px var(--f-texto); color: var(--tinta); background: var(--relleno); border: 0; border-radius: 10px; padding: 11px 12px; width: 100%; appearance: none; -webkit-appearance: none; }
+select { background-image: linear-gradient(45deg, transparent 50%, var(--tinta-2) 50%), linear-gradient(135deg, var(--tinta-2) 50%, transparent 50%); background-position: calc(100% - 18px) 52%, calc(100% - 13px) 52%; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 34px; }
+.dos { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center; }
+.casillas { display: grid; gap: 2px; }
+.casillas label { display: flex; gap: 10px; align-items: center; cursor: pointer; padding: 8px 0; color: var(--tinta); }
+input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--acento); margin: 0; }
 
 /* la pregunta */
-article.preg { background: var(--hoja); border: 1px solid var(--linea); border-radius: 10px; padding: 18px 18px 16px; display: grid; gap: 12px; }
-.preg-cab { display: flex; justify-content: space-between; gap: 10px; font: 500 12.5px var(--f-dato); color: var(--tinta-2); font-variant-numeric: tabular-nums; flex-wrap: wrap; }
-.chip { font: 600 11.5px var(--f-texto); letter-spacing: .03em; padding: 2px 8px; border-radius: 999px; background: var(--acento-suave); color: var(--acento); }
-details.caso { background: var(--papel); border-left: 3px solid var(--acento); border-radius: 4px; padding: 8px 12px; font-size: 14.5px; }
-details.caso summary { cursor: pointer; font-weight: 600; color: var(--acento); }
-.enun { font-weight: 600; font-size: 17px; }
+article.preg { display: grid; gap: 14px; }
+.preg-cab { display: flex; gap: 6px; font-size: 14px; color: var(--tinta-2); flex-wrap: wrap; }
+.preg-cab span + span::before { content: "·"; margin-right: 6px; }
+.chip { font: inherit; }
+details.caso { background: var(--relleno); border-radius: var(--radio); padding: 12px 14px; font-size: 16px; }
+details.caso summary { cursor: pointer; font-weight: 600; color: var(--tinta); }
+.enun { font-weight: 600; font-size: 19px; line-height: 1.4; }
 ol.ops { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-ol.ops button { width: 100%; text-align: left; display: grid; grid-template-columns: 2rem 1fr; gap: 4px; font: 15.5px/1.45 var(--f-texto); color: var(--tinta); background: var(--hoja); border: 1px solid var(--linea); border-radius: var(--radio); padding: 10px 12px; cursor: pointer; }
-ol.ops button .l { font: 500 14px var(--f-dato); color: var(--tinta-2); }
-ol.ops button:hover:not(:disabled) { border-color: var(--acento); }
+ol.ops button { width: 100%; text-align: left; display: grid; grid-template-columns: 1.6rem 1fr; gap: 6px; font: 17px/1.4 var(--f-texto); color: var(--tinta); background: var(--relleno); border: 2px solid transparent; border-radius: var(--radio); padding: 12px 14px; cursor: pointer; }
+ol.ops button .l { font-weight: 600; color: var(--tinta-2); }
+ol.ops button:active:not(:disabled) { background: var(--relleno-2); }
 ol.ops button.elegida { border-color: var(--acento); background: var(--acento-suave); }
 ol.ops button.ok { border-color: var(--ok); background: var(--ok-suave); }
+ol.ops button.ok .l { color: var(--ok); }
 ol.ops button.mal { border-color: var(--mal); background: var(--mal-suave); }
+ol.ops button.mal .l { color: var(--mal); }
 ol.ops button:disabled { cursor: default; opacity: 1; }
-.veredicto { font-weight: 700; }
+.veredicto { font-weight: 600; font-size: 17px; }
 .veredicto.ok { color: var(--ok); } .veredicto.mal { color: var(--mal); } .veredicto.blanco { color: var(--aviso); }
-.fuentes { font-size: 13px; color: var(--tinta-2); border-top: 1px dashed var(--linea); padding-top: 8px; }
+.fuentes { font-size: 14px; color: var(--tinta-2); }
 .barra { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
-.progreso { height: 4px; background: var(--linea); border-radius: 2px; overflow: hidden; }
+.progreso { height: 3px; background: var(--relleno); border-radius: 2px; overflow: hidden; }
 .progreso i { display: block; height: 100%; background: var(--acento); }
-.reloj { font: 500 15px var(--f-dato); font-variant-numeric: tabular-nums; }
+.reloj { font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .reloj.poco { color: var(--mal); }
 
 /* simulacro: rejilla de números */
-.rejilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(2.4rem, 1fr)); gap: 4px; }
-.rejilla button { font: 500 12.5px var(--f-dato); padding: 6px 0; border-radius: 5px; border: 1px solid var(--linea); background: var(--hoja); color: var(--tinta-2); cursor: pointer; }
-.rejilla button.resp { background: var(--acento-suave); color: var(--acento); border-color: var(--acento); }
+.rejilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(2.5rem, 1fr)); gap: 6px; }
+.rejilla button { font: 500 14px var(--f-texto); font-variant-numeric: tabular-nums; padding: 8px 0; border-radius: 8px; border: 0; background: var(--relleno); color: var(--tinta-2); cursor: pointer; }
+.rejilla button.resp { background: var(--acento-suave); color: var(--acento); }
 .rejilla button.actual { outline: 2px solid var(--tinta); }
-.rejilla button.ok { background: var(--ok-suave); border-color: var(--ok); color: var(--ok); }
-.rejilla button.mal { background: var(--mal-suave); border-color: var(--mal); color: var(--mal); }
+.rejilla button.ok { background: var(--ok-suave); color: var(--ok); }
+.rejilla button.mal { background: var(--mal-suave); color: var(--mal); }
 
 /* resultados y progreso */
-.resumen { display: grid; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: 10px; }
-.dato { background: var(--hoja); border: 1px solid var(--linea); border-radius: var(--radio); padding: 10px 12px; display: grid; gap: 2px; }
-.dato .v { font: 600 1.5rem/1.1 var(--f-titulo); font-variant-numeric: tabular-nums; }
-.dato .k { font-size: 12.5px; color: var(--tinta-2); }
-table.temas { width: 100%; border-collapse: collapse; font-size: 14px; }
-table.temas th, table.temas td { text-align: left; padding: 7px 6px; border-bottom: 1px solid var(--linea); }
-table.temas th { font: 600 11.5px var(--f-texto); letter-spacing: .05em; text-transform: uppercase; color: var(--tinta-2); }
-table.temas td.n { font-family: var(--f-dato); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
-.mini { display: inline-block; width: 5.5rem; height: 6px; background: var(--linea); border-radius: 3px; overflow: hidden; vertical-align: middle; margin-left: 6px; }
+.resumen { display: grid; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: 8px; }
+.dato { background: var(--relleno); border-radius: var(--radio); padding: 12px 14px; display: grid; gap: 2px; }
+.dato .v { font: 700 24px/1.1 var(--f-texto); font-variant-numeric: tabular-nums; }
+.dato .k { font-size: 14px; color: var(--tinta-2); }
+table.temas { width: 100%; border-collapse: collapse; font-size: 15px; margin-top: 8px; }
+table.temas th, table.temas td { text-align: left; padding: 9px 4px; border-bottom: 1px solid var(--linea); }
+table.temas th { font-weight: 400; color: var(--tinta-2); font-size: 14px; }
+table.temas td.n { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.mini { display: inline-block; width: 4.5rem; height: 4px; background: var(--relleno); border-radius: 2px; overflow: hidden; vertical-align: middle; margin-left: 8px; }
 .mini i { display: block; height: 100%; background: var(--acento); }
 .tabla-env { overflow-x: auto; }
-footer { margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--linea); font-size: 13px; color: var(--tinta-2); display: grid; gap: 6px; }
-h2 { font: 600 1.15rem var(--f-titulo); margin: 0; }
-.vacio { padding: 18px; text-align: center; color: var(--tinta-2); background: var(--hoja); border: 1px dashed var(--linea); border-radius: 10px; }
-@media (prefers-reduced-motion: no-preference) { ol.ops button, .progreso i { transition: background-color .15s, border-color .15s, width .25s; } }
+.vacio { padding: 18px; text-align: center; color: var(--tinta-2); background: var(--relleno); border-radius: var(--radio); }
 
-/* inicio: dos botones grandes */
-.inicio { gap: 12px; padding-block: 8px 18px; }
-.estado { margin: 0 0 4px; color: var(--tinta-2); font-size: 15px; }
-.estado b { color: var(--tinta); font-weight: 600; }
-button.grande { display: grid; gap: 2px; text-align: left; width: 100%; padding: 18px 20px; border-radius: 14px; font: 600 1.35rem/1.2 var(--f-titulo); cursor: pointer; border: 1px solid var(--acento); }
-button.grande span { font: 400 14px/1.4 var(--f-texto); opacity: .85; }
-button.grande.prim { background: var(--acento); color: var(--hoja); }
-button.grande.sec { background: var(--hoja); color: var(--acento); }
-.mas { display: flex; flex-wrap: wrap; gap: 4px 20px; margin: 6px 0 0; }
-button.enlace { font: 500 14px var(--f-texto); color: var(--acento); background: none; border: 0; padding: 4px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
-.volver { justify-self: start; text-decoration: none; }
-.dos { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center; text-transform: none; font-weight: 400; letter-spacing: 0; }
-button.ancho { width: 100%; padding: 13px 16px; }
-details > summary { cursor: pointer; color: var(--tinta-2); font-size: 14px; }
-details.fuentes summary { font-size: 13px; }
+/* plegables y pie */
+details > summary { cursor: pointer; color: var(--tinta-2); font-size: 15px; padding: 4px 0; }
+details.fuentes summary { font-size: 14px; }
 details.ir { display: grid; gap: 8px; }
+footer { margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--linea); font-size: 13px; line-height: 1.5; color: var(--tinta-2); display: grid; gap: 6px; }
+footer b { font-weight: 600; }
+footer details summary { font-size: 13px; }
 footer details p { margin: 6px 0 0; }
+@media (prefers-reduced-motion: no-preference) { ol.ops button, button.grande, .progreso i { transition: background-color .15s, border-color .15s, width .25s; } }
 
 /* --- web (OpenOposiciones) --- */
 :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
 body { margin: 0; }
 img { max-width: 100%; }
 [hidden] { display: none !important; }
-.marca { margin: 0; font: 600 12px var(--f-dato); letter-spacing: .08em; text-transform: uppercase; color: var(--acento); }
-footer a { color: var(--acento); }
+.marca { margin: 0; font: 600 15px var(--f-texto); color: var(--acento); }
+footer a { color: var(--acento); text-decoration: none; }
 .instalar { display: grid; gap: 6px; }
 .instalar[open] > summary { margin-bottom: 4px; }
-.instalar button { justify-self: start; font: 600 14px var(--f-texto); color: #fff; background: var(--acento); border: 0; border-radius: 6px; padding: 8px 14px; cursor: pointer; }
+.instalar button { justify-self: start; font: 600 15px var(--f-texto); color: var(--sobre-acento); background: var(--acento); border: 0; border-radius: 10px; padding: 9px 16px; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -163,28 +183,28 @@ footer a { color: var(--acento); }
 <div class="envoltura">
   <header class="cab">
     <p class="marca">OpenOposiciones</p>
-    <h1>Test de Fisioterapia</h1>
+    <h1>Fisioterapia</h1>
     <div class="cifras" id="cifras"></div>
   </header>
 
   <main id="vista"></main>
 
   <footer>
-    <div>Preguntas oficiales con la respuesta de la plantilla del tribunal, sin las anuladas. Tu progreso se guarda solo en este dispositivo: <b>se borra si borras los datos del navegador o desinstalas la app</b>. <a href="privacidad.html">Privacidad</a> · <a href="fisioterapia-ope-preguntas.apkg">Mazo de Anki</a></div>
+    <div>Web independiente, sin relación con el SERMAS ni con ninguna administración. Preguntas oficiales con la respuesta de la plantilla del tribunal, sin las anuladas. Tu progreso se guarda solo en este dispositivo: <b>se borra si borras los datos del navegador o desinstalas la app</b>. <a href="como-funciona.html">Cómo funciona</a> · <a href="privacidad.html">Privacidad</a> · <a href="como-funciona.html#contacto">Contacto</a> · <a href="fisioterapia-ope-preguntas.apkg">Mazo de Anki</a></div>
     <details class="mas-info"><summary>De dónde salen las preguntas</summary>
       <p>Cuadernillos y plantillas publicados por cada administración (servicios de salud, consejerías y otras administraciones). Cada pregunta indica de qué examen sale. Respuesta según la plantilla definitiva cuando existe; si el tribunal solo publicó la provisional, se usa esa sin las anuladas que constan.</p>
       <p>Página independiente, sin relación con ninguna administración. Las leyes y la evidencia cambian: ante una duda, manda la fuente actual.</p>
       <p id="generado"></p>
     </details>
   <details class="instalar" id="instalar"><summary>Instalar en el móvil</summary>
-      <div id="i-android">Menú ⋮ del navegador → «Instalar app».</div>
-      <div id="i-ios">En Safari: Compartir → «Añadir a pantalla de inicio». Úsala siempre desde el icono: Safari y la app guardan el progreso por separado, y Safari lo borra si no entras en 7 días.</div>
+      <div id="i-android">Menú del navegador (⋮ o ☰) → «Instalar app» o «Añadir a pantalla de inicio».</div>
+      <div id="i-ios">Botón Compartir → «Añadir a pantalla de inicio» (en Safari, o en Chrome y Edge con iOS 16.4 o posterior). Úsala siempre desde el icono: Safari y la app guardan el progreso por separado, y Safari lo borra si no entras en 7 días.</div>
       <button type="button" id="i-boton" hidden>Instalar</button>
     </details>
     </footer>
 </div>
 
-<script src="banco.js?v=987cf17294"></script>
+<script src="banco.js?v=94ebb5df91"></script>
 <script>
 (() => {
   const B = window.BANCO;
@@ -231,9 +251,9 @@ footer a { color: var(--acento); }
   const azar = a => a[Math.floor(Math.random() * a.length)];
   const tiempo = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
   const norm = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
-  const num = n => n.toLocaleString("es");
+  const num = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".");  // 6.410 (toLocaleString no agrupa los miles con 4 cifras)
 
-  $("#cifras").innerHTML = `<span><b>${num(Q.length)}</b> preguntas oficiales</span><span>${ANIOS[0]}–${ANIOS[ANIOS.length - 1]}</span>`;
+  $("#cifras").innerHTML = `<span class="objetivo">OPE SERMAS 2026</span><span>${num(Q.length)} preguntas oficiales</span>`;
   $("#generado").textContent = `Banco generado el ${new Date(B.generado).toLocaleDateString("es", { day: "numeric", month: "long", year: "numeric" })}.`;
 
   // ---------- filtros (se guardan y se aplican a Estudiar y al simulacro) ----------
@@ -292,10 +312,10 @@ footer a { color: var(--acento); }
     const nf = Q.filter(q => fallada(q.id)).length;
     const a = activos(), n = filtrar().length;
     pantalla(`<section class="panel inicio">
-      <p class="estado">${vistas
+      <p class="estado"${vistas ? "" : " hidden"}>${vistas
         ? `Llevas <b>${num(vistas)}</b> preguntas · <b>${Math.round(100 * ac / tot)} %</b> de aciertos${nf ? ` · ${num(nf)} por repasar` : ""}`
-        : "Empieza por las preguntas que más se repiten en los exámenes."}</p>
-      <button type="button" class="grande prim" id="estudiar"${n ? "" : " disabled"}>Estudiar<span>${a.length ? `${num(n)} preguntas con tus filtros` : "las más preguntadas primero y tus fallos"}</span></button>
+        : ""}</p>
+      <button type="button" class="grande prim" id="estudiar"${n ? "" : " disabled"}>Estudiar<span>${a.length ? `${num(n)} preguntas con tus filtros` : "primero lo que más cae en SERMAS, y tus fallos"}</span></button>
       <button type="button" class="grande sec" id="filtrar">Filtrar<span>${a.length ? esc(a.join(" · ")) : "tema, convocatoria, año o palabra"}</span></button>
       <p class="mas"><button type="button" class="enlace" id="ir-azar">Estudiar al azar</button><button type="button" class="enlace" id="ir-sim">Simulacro de examen</button><button type="button" class="enlace" id="ir-prog">Mi progreso</button></p>
     </section>`);
@@ -537,6 +557,24 @@ footer a { color: var(--acento); }
   addEventListener("beforeinstallprompt", e => { e.preventDefault(); aviso = e; boton.hidden = false; });
   boton.addEventListener("click", async () => { if (!aviso) return; aviso.prompt(); await aviso.userChoice; aviso = null; boton.hidden = true; });
   addEventListener("appinstalled", () => { caja.hidden = true; });
+})();
+</script>
+<script>
+(() => {
+  // Contador de visitas (GoatCounter, UE): solo totales. Sin cookies, sin IP guardada, nada de lo que respondes.
+  const n = navigator;
+  if (n.doNotTrack === "1" || n.globalPrivacyControl || !n.onLine || location.hostname !== "openoposiciones.github.io") return;
+  const u = new URL(location.href);
+  const g = (u.searchParams.get("g") || "").replace(/[^a-z0-9-]/gi, "").slice(0, 40);   // enlace de un grupo: ?g=nombre
+  if (g) { u.searchParams.delete("g"); history.replaceState(null, "", u.pathname + u.search + u.hash); }
+  const instalada = matchMedia("(display-mode: standalone)").matches || n.standalone === true;
+  const contar = (p, ev) => { new Image().src = "https://openoposiciones.goatcounter.com/count?p=" + encodeURIComponent(p) + (ev ? "&e=true" : "")
+    + (g ? "&q=" + encodeURIComponent("?utm_campaign=" + g) : "") + "&rnd=" + Math.random().toString(36).slice(2); };
+  contar(instalada ? "/app-instalada" : "/");
+  let empezado = false;
+  document.addEventListener("click", e => {
+    if (!empezado && e.target.closest("#estudiar, #ir-azar, #f-ir, #empezar")) { empezado = true; contar("empezo-a-estudiar", true); }
+  }, true);
 })();
 </script>
 </body>
