@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<title>Privacidad · OpenOposiciones</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+:root { --papel: #f6f7f4; --tinta: #1f2a2a; --tinta-2: #55625f; --acento: #0f6e66; }
+@media (prefers-color-scheme: dark) { :root { --papel: #141a19; --tinta: #e4ebe8; --tinta-2: #9fb0ab; --acento: #4fbfb2; } }
+body { margin: 0; background: var(--papel); color: var(--tinta); font: 16px/1.6 "Public Sans", system-ui, sans-serif;
+  padding: max(24px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) 48px max(16px, env(safe-area-inset-left, 0px)); }
+main { max-width: 42rem; margin: 0 auto; }
+h1 { font: 600 1.8rem/1.2 "Fraunces", Georgia, serif; margin: 8px 0 16px; }
+h2 { font: 600 1.1rem "Fraunces", Georgia, serif; margin: 28px 0 6px; }
+a { color: var(--acento); }
+.nota { color: var(--tinta-2); font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+<p><a href="./">← Volver a las preguntas</a></p>
+<h1>Privacidad y aviso legal</h1>
+
+<h2>Qué datos se recogen</h2>
+<p><b>Ninguno.</b> No hay cuentas, formularios, analítica, publicidad ni cookies. Lo que respondes y tus estadísticas se guardan solo en tu dispositivo (almacenamiento local del navegador) y nunca se envían a ningún sitio. Para borrarlo, borra los datos de este sitio en tu navegador o desinstala la app.</p>
+
+<h2>Alojamiento</h2>
+<p>La web se sirve desde GitHub Pages (de GitHub, Inc.). Como cualquier servidor, recibe datos técnicos de la conexión (dirección IP, navegador) para entregar la página y protegerla de ataques; esta web no accede a ellos ni los guarda. Las fuentes tipográficas están alojadas en la propia web: no se contacta con terceros.</p>
+
+<h2>Las preguntas</h2>
+<p>Son preguntas de exámenes oficiales de oposición publicados por cada administración (cuadernillos y plantillas de respuestas), sin las anuladas. Cada pregunta indica de qué examen sale. Se usa la plantilla tal como la publicó el tribunal, sin revisar: las leyes y la evidencia cambian, y ante una duda manda la fuente actual.</p>
+<p>OpenOposiciones es una página independiente y gratuita, sin relación con ninguna administración, servicio de salud o academia.</p>
+
+<h2>Contacto</h2>
+<p>Para cualquier duda, errata o petición: <span id="correo" data-u="senoicisoponepo" data-d="moc.liamg">openoposiciones (arroba) gmail (punto) com</span><script>(() => { const e = document.getElementById("correo"); const r = s => s.split("").reverse().join(""); const c = r(e.dataset.u) + "@" + r(e.dataset.d); const a = document.createElement("a"); a.href = "mailto:" + c; a.textContent = c; e.replaceWith(a); })();</script>.</p>
+
+<p class="nota">Actualizado: 2026-11-18.</p>
+</main>
+</body>
+</html>

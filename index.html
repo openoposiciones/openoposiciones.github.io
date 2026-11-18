@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#f6f7f4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141a19" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="iconos/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="iconos/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="OpenOposiciones">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="robots" content="noindex, nofollow">
+<title>OpenOposiciones · Fisioterapia</title>
+<meta name="description" content="Preguntas oficiales de exámenes de oposición de Fisioterapia (servicios de salud y otras administraciones), con la respuesta de la plantilla oficial.">
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+/* Layout: una columna de lectura (hoja de examen) con barra de modos arriba; panel de filtros plegable. */
+:root {
+  --papel: #f6f7f4;      /* fondo: papel de examen ligeramente verde */
+  --hoja: #ffffff;
+  --tinta: #1f2a2a;
+  --tinta-2: #55625f;
+  --linea: #d5dcd8;
+  --acento: #0f6e66;     /* verde quirófano */
+  --acento-suave: #e1efec;
+  --ok: #2e7d4f; --ok-suave: #e3f2e8;
+  --mal: #b4442f; --mal-suave: #f8e5e0;
+  --aviso: #9a6a12;
+  --f-titulo: "Fraunces", Georgia, "Times New Roman", serif;
+  --f-texto: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-dato: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --radio: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --papel: #141a19; --hoja: #1b2321; --tinta: #e4ebe8; --tinta-2: #9fb0ab; --linea: #31403c;
+    --acento: #4fbfb2; --acento-suave: #1d3532; --ok: #6cc892; --ok-suave: #1d3326; --mal: #ec8a74; --mal-suave: #3a2420; --aviso: #e0b35c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --papel: #141a19; --hoja: #1b2321; --tinta: #e4ebe8; --tinta-2: #9fb0ab; --linea: #31403c;
+  --acento: #4fbfb2; --acento-suave: #1d3532; --ok: #6cc892; --ok-suave: #1d3326; --mal: #ec8a74; --mal-suave: #3a2420; --aviso: #e0b35c;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--papel); color: var(--tinta); }
+body { font: 16px/1.55 var(--f-texto); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 48px; }
+.envoltura { max-width: 46rem; margin: 0 auto; }
+header.cab { padding-block: 28px 12px; display: grid; gap: 6px; }
+h1 { font: 600 clamp(1.6rem, 4vw, 2.1rem)/1.15 var(--f-titulo); margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+.sub { color: var(--tinta-2); margin: 0; max-width: 62ch; }
+.cifras { display: flex; flex-wrap: wrap; gap: 6px 18px; font: 500 13px var(--f-dato); color: var(--tinta-2); font-variant-numeric: tabular-nums; }
+.cifras b { color: var(--tinta); font-weight: 500; }
+
+nav.modos { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--papel); display: flex; gap: 4px; padding-block: 10px; border-bottom: 1px solid var(--linea); overflow-x: auto; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--papel); }
+nav.modos button { font: 600 14px var(--f-texto); border: 1px solid transparent; background: none; color: var(--tinta-2); padding: 7px 12px; border-radius: 999px; cursor: pointer; white-space: nowrap; }
+nav.modos button[aria-pressed="true"] { background: var(--acento); color: var(--hoja); }
+nav.modos button:hover:not([aria-pressed="true"]) { border-color: var(--linea); color: var(--tinta); }
+
+section.panel { padding-block: 18px; display: grid; gap: 14px; }
+.filtros { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 10px 14px; }
+label.campo, div.campo { display: grid; gap: 4px; font: 600 12px var(--f-texto); letter-spacing: .04em; text-transform: uppercase; color: var(--tinta-2); }
+select, input[type="search"], input[type="number"] { font: 15px var(--f-texto); color: var(--tinta); background: var(--hoja); border: 1px solid var(--linea); border-radius: var(--radio); padding: 8px 10px; width: 100%; }
+.casillas { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 14px; color: var(--tinta-2); }
+.casillas label { display: flex; gap: 6px; align-items: center; cursor: pointer; }
+.acciones { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+button.prim, button.sec { font: 600 15px var(--f-texto); border-radius: var(--radio); padding: 10px 16px; cursor: pointer; border: 1px solid var(--acento); }
+button.prim { background: var(--acento); color: var(--hoja); }
+button.sec { background: none; color: var(--acento); }
+button:disabled { opacity: .45; cursor: default; }
+:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; }
+.nota { font-size: 13px; color: var(--tinta-2); }
+
+/* la pregunta */
+article.preg { background: var(--hoja); border: 1px solid var(--linea); border-radius: 10px; padding: 18px 18px 16px; display: grid; gap: 12px; }
+.preg-cab { display: flex; justify-content: space-between; gap: 10px; font: 500 12.5px var(--f-dato); color: var(--tinta-2); font-variant-numeric: tabular-nums; flex-wrap: wrap; }
+.chip { font: 600 11.5px var(--f-texto); letter-spacing: .03em; padding: 2px 8px; border-radius: 999px; background: var(--acento-suave); color: var(--acento); }
+details.caso { background: var(--papel); border-left: 3px solid var(--acento); border-radius: 4px; padding: 8px 12px; font-size: 14.5px; }
+details.caso summary { cursor: pointer; font-weight: 600; color: var(--acento); }
+.enun { font-weight: 600; font-size: 17px; }
+ol.ops { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+ol.ops button { width: 100%; text-align: left; display: grid; grid-template-columns: 2rem 1fr; gap: 4px; font: 15.5px/1.45 var(--f-texto); color: var(--tinta); background: var(--hoja); border: 1px solid var(--linea); border-radius: var(--radio); padding: 10px 12px; cursor: pointer; }
+ol.ops button .l { font: 500 14px var(--f-dato); color: var(--tinta-2); }
+ol.ops button:hover:not(:disabled) { border-color: var(--acento); }
+ol.ops button.elegida { border-color: var(--acento); background: var(--acento-suave); }
+ol.ops button.ok { border-color: var(--ok); background: var(--ok-suave); }
+ol.ops button.mal { border-color: var(--mal); background: var(--mal-suave); }
+ol.ops button:disabled { cursor: default; opacity: 1; }
+.veredicto { font-weight: 700; }
+.veredicto.ok { color: var(--ok); } .veredicto.mal { color: var(--mal); } .veredicto.blanco { color: var(--aviso); }
+.fuentes { font-size: 13px; color: var(--tinta-2); border-top: 1px dashed var(--linea); padding-top: 8px; }
+.barra { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.progreso { height: 4px; background: var(--linea); border-radius: 2px; overflow: hidden; }
+.progreso i { display: block; height: 100%; background: var(--acento); }
+.reloj { font: 500 15px var(--f-dato); font-variant-numeric: tabular-nums; }
+.reloj.poco { color: var(--mal); }
+
+/* simulacro: rejilla de números */
+.rejilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(2.4rem, 1fr)); gap: 4px; }
+.rejilla button { font: 500 12.5px var(--f-dato); padding: 6px 0; border-radius: 5px; border: 1px solid var(--linea); background: var(--hoja); color: var(--tinta-2); cursor: pointer; }
+.rejilla button.resp { background: var(--acento-suave); color: var(--acento); border-color: var(--acento); }
+.rejilla button.actual { outline: 2px solid var(--tinta); }
+.rejilla button.ok { background: var(--ok-suave); border-color: var(--ok); color: var(--ok); }
+.rejilla button.mal { background: var(--mal-suave); border-color: var(--mal); color: var(--mal); }
+
+/* resultados y progreso */
+.resumen { display: grid; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: 10px; }
+.dato { background: var(--hoja); border: 1px solid var(--linea); border-radius: var(--radio); padding: 10px 12px; display: grid; gap: 2px; }
+.dato .v { font: 600 1.5rem/1.1 var(--f-titulo); font-variant-numeric: tabular-nums; }
+.dato .k { font-size: 12.5px; color: var(--tinta-2); }
+table.temas { width: 100%; border-collapse: collapse; font-size: 14px; }
+table.temas th, table.temas td { text-align: left; padding: 7px 6px; border-bottom: 1px solid var(--linea); }
+table.temas th { font: 600 11.5px var(--f-texto); letter-spacing: .05em; text-transform: uppercase; color: var(--tinta-2); }
+table.temas td.n { font-family: var(--f-dato); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.mini { display: inline-block; width: 5.5rem; height: 6px; background: var(--linea); border-radius: 3px; overflow: hidden; vertical-align: middle; margin-left: 6px; }
+.mini i { display: block; height: 100%; background: var(--acento); }
+.tabla-env { overflow-x: auto; }
+footer { margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--linea); font-size: 13px; color: var(--tinta-2); display: grid; gap: 6px; }
+h2 { font: 600 1.15rem var(--f-titulo); margin: 0; }
+.vacio { padding: 18px; text-align: center; color: var(--tinta-2); background: var(--hoja); border: 1px dashed var(--linea); border-radius: 10px; }
+@media (prefers-reduced-motion: no-preference) { ol.ops button, .progreso i { transition: background-color .15s, border-color .15s, width .25s; } }
+
+/* inicio: dos botones grandes */
+.inicio { gap: 12px; padding-block: 8px 18px; }
+.estado { margin: 0 0 4px; color: var(--tinta-2); font-size: 15px; }
+.estado b { color: var(--tinta); font-weight: 600; }
+button.grande { display: grid; gap: 2px; text-align: left; width: 100%; padding: 18px 20px; border-radius: 14px; font: 600 1.35rem/1.2 var(--f-titulo); cursor: pointer; border: 1px solid var(--acento); }
+button.grande span { font: 400 14px/1.4 var(--f-texto); opacity: .85; }
+button.grande.prim { background: var(--acento); color: var(--hoja); }
+button.grande.sec { background: var(--hoja); color: var(--acento); }
+.mas { display: flex; flex-wrap: wrap; gap: 4px 20px; margin: 6px 0 0; }
+button.enlace { font: 500 14px var(--f-texto); color: var(--acento); background: none; border: 0; padding: 4px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.volver { justify-self: start; text-decoration: none; }
+.dos { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center; text-transform: none; font-weight: 400; letter-spacing: 0; }
+button.ancho { width: 100%; padding: 13px 16px; }
+details > summary { cursor: pointer; color: var(--tinta-2); font-size: 14px; }
+details.fuentes summary { font-size: 13px; }
+details.ir { display: grid; gap: 8px; }
+footer details p { margin: 6px 0 0; }
+
+/* --- web (OpenOposiciones) --- */
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+.marca { margin: 0; font: 600 12px var(--f-dato); letter-spacing: .08em; text-transform: uppercase; color: var(--acento); }
+footer a { color: var(--acento); }
+.instalar { display: grid; gap: 6px; }
+.instalar[open] > summary { margin-bottom: 4px; }
+.instalar button { justify-self: start; font: 600 14px var(--f-texto); color: #fff; background: var(--acento); border: 0; border-radius: 6px; padding: 8px 14px; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="envoltura">
+  <header class="cab">
+    <p class="marca">OpenOposiciones</p>
+    <h1>Test de Fisioterapia</h1>
+    <div class="cifras" id="cifras"></div>
+  </header>
+
+  <main id="vista"></main>
+
+  <footer>
+    <div>Preguntas oficiales con la respuesta de la plantilla del tribunal, sin las anuladas. Tu progreso se guarda solo en este dispositivo: <b>se borra si borras los datos del navegador o desinstalas la app</b>. <a href="privacidad.html">Privacidad</a> · <a href="fisioterapia-ope-preguntas.apkg">Mazo de Anki</a></div>
+    <details class="mas-info"><summary>De dónde salen las preguntas</summary>
+      <p>Cuadernillos y plantillas publicados por cada administración (servicios de salud, consejerías y otras administraciones). Cada pregunta indica de qué examen sale. Respuesta según la plantilla definitiva cuando existe; si el tribunal solo publicó la provisional, se usa esa sin las anuladas que constan.</p>
+      <p>Página independiente, sin relación con ninguna administración. Las leyes y la evidencia cambian: ante una duda, manda la fuente actual.</p>
+      <p id="generado"></p>
+    </details>
+  <details class="instalar" id="instalar"><summary>Instalar en el móvil</summary>
+      <div id="i-android">Menú ⋮ del navegador → «Instalar app».</div>
+      <div id="i-ios">En Safari: Compartir → «Añadir a pantalla de inicio». Úsala siempre desde el icono: Safari y la app guardan el progreso por separado, y Safari lo borra si no entras en 7 días.</div>
+      <button type="button" id="i-boton" hidden>Instalar</button>
+    </details>
+    </footer>
+</div>
+
+<script src="banco.js?v=de0085dac1"></script>
+<script>
+(() => {
+  const B = window.BANCO;
+  const L = "ABCDE";
+  const $ = (s, r = document) => r.querySelector(s);
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const Q = B.q.map(r => ({ id: r[0], en: r[1], op: r[2], c: r[3], caso: r[4] >= 0 ? B.casos[r[4]] : "", tema: r[5], gen: r[6] === 1, f: r[7], rel: r[8] || 0 }));
+  const EX = B.ex.map(e => ({ serv: e[0], fecha: e[1], turno: e[2], id: e[3], anio: (String(e[1]).match(/\d{4}/) || [""])[0] }));
+
+  // organismo corto para el filtro
+  const org = e => {
+    const s = e.serv;
+    const m = s.match(/^(.*?)\s·\s(.*)$/);
+    const base = m ? m[1] : s;
+    if (/SERMAS|Comunidad de Madrid/.test(s)) return "Madrid";
+    if (/Andaluc|SAS/.test(s)) return "Andalucía";
+    if (/Castilla y León|SACYL|Castilla y Le/.test(s) && !/Mancha/.test(s)) return "Castilla y León";
+    if (/Mancha|SESCAM|JCCM/.test(s)) return "Castilla-La Mancha";
+    if (/Extremadura|SES/.test(s)) return "Extremadura";
+    if (/Murcia|SMS|CARM/.test(s)) return "Murcia";
+    return base.replace(/\s*\(.*\)/, "");
+  };
+  EX.forEach(e => e.org = org(e));
+  const ORGS = [...new Set(EX.map(e => e.org))].sort((a, b) => a.localeCompare(b, "es"));
+  const ANIOS = [...new Set(EX.map(e => e.anio).filter(Boolean))].sort();
+
+  // ---------- almacenamiento local (solo en este navegador) ----------
+  const CLAVE = "banco-fisio-ope-v1";
+  let est = { q: {}, sims: [], n: 0 };
+  try { est = Object.assign(est, JSON.parse(localStorage.getItem(CLAVE) || "{}")); } catch (e) {}
+  const guardar = () => { try { localStorage.setItem(CLAVE, JSON.stringify(est)); } catch (e) {} };
+  const anotar = (id, ok) => {
+    const r = est.q[id] || (est.q[id] = [0, 0, 0, 0]); // [vistas, aciertos, fallos seguidos, nº de respuesta de la última vez]
+    est.n = (est.n || 0) + 1;
+    r[0]++; if (ok) { r[1]++; r[2] = 0; } else { r[2]++; }
+    r[3] = est.n;
+    guardar();
+  };
+  const fallada = id => est.q[id] && est.q[id][2] > 0;
+
+  // ---------- utilidades ----------
+  const fuenteTxt = q => q.f.map(([i, n]) => { const e = EX[i]; return `${esc(e.serv)} · ${esc(e.fecha)}${e.turno && e.turno !== "-" ? " · " + esc(e.turno) : ""} · pregunta ${n}`; }).join("<br>");
+  const barajar = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const azar = a => a[Math.floor(Math.random() * a.length)];
+  const tiempo = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+  const norm = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const num = n => n.toLocaleString("es");
+
+  $("#cifras").innerHTML = `<span><b>${num(Q.length)}</b> preguntas oficiales</span><span>${ANIOS[0]}–${ANIOS[ANIOS.length - 1]}</span>`;
+  $("#generado").textContent = `Banco generado el ${new Date(B.generado).toLocaleDateString("es", { day: "numeric", month: "long", year: "numeric" })}.`;
+
+  // ---------- filtros (se guardan y se aplican a Estudiar y al simulacro) ----------
+  const SIN_FILTRO = { tema: "", org: "", desde: ANIOS[0], hasta: ANIOS[ANIOS.length - 1], texto: "", nuevas: false, fallos: false, general: true };
+  let filtro = { ...SIN_FILTRO };
+  try { Object.assign(filtro, JSON.parse(localStorage.getItem(CLAVE + "-f") || "{}")); } catch (e) {}
+  const guardarFiltro = () => { try { localStorage.setItem(CLAVE + "-f", JSON.stringify(filtro)); } catch (e) {} };
+  const filtrar = () => {
+    const t = norm(filtro.texto.trim());
+    return Q.filter(q => {
+      if (filtro.tema && q.tema !== filtro.tema) return false;
+      if (!filtro.general && q.gen) return false;
+      if (filtro.nuevas && est.q[q.id]) return false;
+      if (filtro.fallos && !fallada(q.id)) return false;
+      const exs = q.f.map(([i]) => EX[i]);
+      if (filtro.org && !exs.some(e => e.org === filtro.org)) return false;
+      if (!exs.some(e => !e.anio || (e.anio >= filtro.desde && e.anio <= filtro.hasta))) return false;
+      if (t && !norm(q.en + " " + q.op.join(" ") + " " + q.caso).includes(t)) return false;
+      return true;
+    });
+  };
+  const activos = () => {
+    const a = [];
+    if (filtro.tema) a.push(B.temas[filtro.tema] || filtro.tema);
+    if (filtro.org) a.push(filtro.org);
+    if (filtro.desde !== SIN_FILTRO.desde || filtro.hasta !== SIN_FILTRO.hasta) a.push(filtro.desde === filtro.hasta ? filtro.desde : `${filtro.desde}–${filtro.hasta}`);
+    if (filtro.texto.trim()) a.push(`«${filtro.texto.trim()}»`);
+    if (filtro.nuevas) a.push("solo nuevas");
+    if (filtro.fallos) a.push("solo mis fallos");
+    if (!filtro.general) a.push("sin parte general");
+    return a;
+  };
+  const opciones = (vals, sel, todos) => (todos ? `<option value="">${todos}</option>` : "") + vals.map(([v, t]) => `<option value="${esc(v)}"${v === sel ? " selected" : ""}>${esc(t)}</option>`).join("");
+
+  // ---------- tarjeta de pregunta ----------
+  function tarjeta(q, cab, extra = "") {
+    return `<article class="preg" aria-live="polite">
+      <div class="preg-cab"><span>${cab}</span><span class="chip">${esc(B.temas[q.tema] || "Otros")}</span></div>
+      ${q.caso ? `<details class="caso" open><summary>Caso práctico</summary>${esc(q.caso)}</details>` : ""}
+      <div class="enun">${esc(q.en)}</div>
+      <ol class="ops">${q.op.map((o, k) => `<li><button type="button" data-k="${k}"><span class="l">${L[k]})</span><span>${esc(o)}</span></button></li>`).join("")}</ol>
+      ${extra}
+    </article>`;
+  }
+
+  const vista = $("#vista");
+  let limpiar = () => {};
+  const pantalla = html => { limpiar(); limpiar = () => {}; vista.innerHTML = html; window.scrollTo(0, 0); };
+  const volver = `<button type="button" class="enlace volver" id="volver">← Inicio</button>`;
+  const enlazarVolver = () => $("#volver") && $("#volver").addEventListener("click", inicio);
+
+  // ---------- inicio: Estudiar y Filtrar ----------
+  function inicio() {
+    const vistas = Object.keys(est.q).length;
+    let ac = 0, tot = 0; Object.values(est.q).forEach(r => { ac += r[1]; tot += r[0]; });
+    const nf = Q.filter(q => fallada(q.id)).length;
+    const a = activos(), n = filtrar().length;
+    pantalla(`<section class="panel inicio">
+      <p class="estado">${vistas
+        ? `Llevas <b>${num(vistas)}</b> preguntas · <b>${Math.round(100 * ac / tot)} %</b> de aciertos${nf ? ` · ${num(nf)} por repasar` : ""}`
+        : "Empieza por las preguntas que más se repiten en los exámenes."}</p>
+      <button type="button" class="grande prim" id="estudiar"${n ? "" : " disabled"}>Estudiar<span>${a.length ? `${num(n)} preguntas con tus filtros` : "las más preguntadas primero y tus fallos"}</span></button>
+      <button type="button" class="grande sec" id="filtrar">Filtrar<span>${a.length ? esc(a.join(" · ")) : "tema, convocatoria, año o palabra"}</span></button>
+      <p class="mas"><button type="button" class="enlace" id="ir-sim">Simulacro de examen</button><button type="button" class="enlace" id="ir-prog">Mi progreso</button></p>
+    </section>`);
+    $("#estudiar").addEventListener("click", estudiar);
+    $("#filtrar").addEventListener("click", filtrarVista);
+    $("#ir-sim").addEventListener("click", simulacro);
+    $("#ir-prog").addEventListener("click", progreso);
+  }
+
+  // ---------- filtrar ----------
+  function filtrarVista() {
+    pantalla(`<section class="panel">
+      ${volver}
+      <h2>Filtrar</h2>
+      <div class="filtros">
+        <label class="campo" for="f-tema">Tema<select id="f-tema">${opciones(Object.entries(B.temas), filtro.tema, "Todos")}</select></label>
+        <label class="campo" for="f-org">Convocatoria<select id="f-org">${opciones(ORGS.map(o => [o, o]), filtro.org, "Todas")}</select></label>
+        <div class="campo">Años<div class="dos"><select id="f-desde" aria-label="Desde">${opciones(ANIOS.map(a => [a, a]), filtro.desde)}</select><span>a</span><select id="f-hasta" aria-label="Hasta">${opciones(ANIOS.map(a => [a, a]), filtro.hasta)}</select></div></div>
+        <label class="campo" for="f-texto">Palabra<input type="search" id="f-texto" placeholder="Kabat, escoliosis, TENS…" value="${esc(filtro.texto)}"></label>
+      </div>
+      <div class="casillas">
+        <label><input type="checkbox" id="f-nuevas"${filtro.nuevas ? " checked" : ""}> Solo nuevas</label>
+        <label><input type="checkbox" id="f-fallos"${filtro.fallos ? " checked" : ""}> Solo mis fallos</label>
+        <label><input type="checkbox" id="f-general"${filtro.general ? " checked" : ""}> Parte general (Madrid)</label>
+      </div>
+      <div class="acciones"><button class="prim" id="f-ir" type="button"></button><button class="sec" id="f-quitar" type="button">Quitar filtros</button></div>
+    </section>`);
+    enlazarVolver();
+    const act = () => {
+      const m = filtrar().length;
+      $("#f-ir").textContent = m ? `Estudiar ${num(m)} preguntas` : "Ninguna pregunta: quita algún filtro";
+      $("#f-ir").disabled = !m;
+      $("#f-quitar").hidden = !activos().length;
+    };
+    const leer = () => {
+      filtro.tema = $("#f-tema").value; filtro.org = $("#f-org").value; filtro.desde = $("#f-desde").value; filtro.hasta = $("#f-hasta").value;
+      if (filtro.desde > filtro.hasta) { filtro.hasta = filtro.desde; $("#f-hasta").value = filtro.hasta; }
+      filtro.texto = $("#f-texto").value; filtro.nuevas = $("#f-nuevas").checked; filtro.fallos = $("#f-fallos").checked; filtro.general = $("#f-general").checked;
+      guardarFiltro(); act();
+    };
+    ["#f-tema", "#f-org", "#f-desde", "#f-hasta", "#f-nuevas", "#f-fallos", "#f-general"].forEach(s => $(s).addEventListener("change", leer));
+    $("#f-texto").addEventListener("input", leer);
+    $("#f-ir").addEventListener("click", estudiar);
+    $("#f-quitar").addEventListener("click", () => { filtro = { ...SIN_FILTRO }; guardarFiltro(); filtrarVista(); });
+    act();
+  }
+
+  // ---------- estudiar: preguntas sin fin ----------
+  // Primero las más preguntadas que no has visto; cada pocas, una que fallaste hace un rato; cuando ya las has visto todas, las que peor llevas.
+  function estudiar() {
+    const pool = barajar(filtrar()).sort((a, b) => b.rel - a.rel);
+    if (!pool.length) return inicio();
+    const recientes = [];
+    let hechas = 0, aciertos = 0;
+    const siguiente = () => {
+      const libre = q => !recientes.includes(q.id);
+      const toca = q => fallada(q.id) && libre(q) && (est.n || 0) - (est.q[q.id][3] || 0) >= 6;
+      if (!filtro.fallos && Math.random() < 0.3) { const f = pool.filter(toca); if (f.length) return azar(f); }
+      const nueva = pool.find(q => !est.q[q.id] && libre(q));
+      if (nueva) return nueva;
+      if (filtro.nuevas) return null;
+      const resto = pool.filter(libre);
+      if (!resto.length) return filtro.fallos ? null : azar(pool);
+      const acierto = q => { const r = est.q[q.id]; return r ? r[1] / r[0] : 0; };
+      return azar(barajar(resto).sort((a, b) => acierto(a) - acierto(b)).slice(0, 40));
+    };
+    const final = () => {
+      pantalla(`<section class="panel">
+        <h2>${hechas ? "Buen trabajo" : "Sin respuestas"}</h2>
+        ${hechas ? `<div class="resumen"><div class="dato"><span class="v">${aciertos}/${hechas}</span><span class="k">aciertos</span></div><div class="dato"><span class="v">${Math.round(100 * aciertos / hechas)} %</span><span class="k">en esta sesión</span></div></div>` : ""}
+        ${filtro.nuevas || filtro.fallos ? `<p class="nota">${filtro.fallos ? "Ya no te quedan fallos con estos filtros." : "Ya has visto todas las preguntas con estos filtros."}</p>` : ""}
+        <div class="acciones"><button class="prim" id="otra" type="button">Inicio</button></div></section>`);
+      $("#otra").addEventListener("click", inicio);
+    };
+    const pintar = () => {
+      const q = siguiente();
+      if (!q) return final();
+      recientes.push(q.id); if (recientes.length > 25) recientes.shift();
+      const r = est.q[q.id];
+      const marca = !r ? "Nueva" : r[2] > 0 ? "La fallaste" : "Repaso";
+      pantalla(`<section class="panel">
+        <div class="barra"><button type="button" class="enlace" id="terminar">← Terminar</button><span class="nota">${hechas ? `${aciertos} de ${hechas} bien` : ""}</span></div>
+        ${tarjeta(q, marca, `<div id="tras" hidden></div>`)}
+        <button class="prim ancho" id="sig" type="button" hidden>Siguiente</button>
+      </section>`);
+      const btns = [...vista.querySelectorAll("ol.ops button")];
+      const responder = k => {
+        if (btns[0].disabled) return;
+        const ok = k === q.c;
+        btns.forEach((b, j) => { b.disabled = true; if (j === q.c) b.classList.add("ok"); else if (j === k) b.classList.add("mal"); });
+        hechas++; if (ok) aciertos++;
+        anotar(q.id, ok);
+        const t = $("#tras"); t.hidden = false;
+        t.innerHTML = `<div class="veredicto ${ok ? "ok" : "mal"}">${ok ? "Correcta" : `Incorrecta · es la ${L[q.c]}`}</div><details class="fuentes"><summary>Examen</summary>${fuenteTxt(q)}</details>`;
+        $("#sig").hidden = false; $("#sig").focus({ preventScroll: true });
+      };
+      btns.forEach(b => b.addEventListener("click", () => responder(+b.dataset.k)));
+      $("#sig").addEventListener("click", pintar);
+      $("#terminar").addEventListener("click", final);
+      const tecla = ev => {
+        if (ev.target.matches("input, select, textarea")) return;
+        const k = "abcde".indexOf(ev.key.toLowerCase());
+        if (k >= 0 && k < q.op.length) responder(k);
+        else if (ev.key === "Enter" && !$("#sig").hidden) { ev.preventDefault(); pintar(); }
+      };
+      document.addEventListener("keydown", tecla);
+      limpiar = () => document.removeEventListener("keydown", tecla);
+    };
+    pintar();
+  }
+
+  // ---------- simulacro ----------
+  function simulacro() {
+    const a = activos();
+    pantalla(`<section class="panel">
+      ${volver}
+      <h2>Simulacro de examen</h2>
+      <p class="nota">100 preguntas al azar · 120 min · +1 acierto, −0,25 error. Nota sobre 50 (mínimo 25), como en SERMAS. Las respuestas se ven al entregar.${a.length ? `<br>Con tus filtros: ${esc(a.join(" · "))}.` : ""}</p>
+      <div class="acciones"><button class="prim" id="empezar" type="button">Empezar</button><span class="nota" id="n-sel"></span></div>
+    </section>`);
+    enlazarVolver();
+    const m = filtrar().length;
+    if (m < 100) { $("#n-sel").textContent = `Con tus filtros hay ${num(m)}: hacen falta 100.`; $("#empezar").disabled = true; }
+    $("#empezar").addEventListener("click", () => correr(barajar(filtrar()).slice(0, 100)));
+
+    function correr(lista) {
+      const resp = new Array(lista.length).fill(-1);
+      let i = 0, quedan = 120 * 60, entregado = false;
+      const reloj = setInterval(() => { quedan--; const r = $("#reloj"); if (r) { r.textContent = tiempo(Math.max(0, quedan)); r.classList.toggle("poco", quedan < 600); } if (quedan <= 0) entregar(); }, 1000);
+      const pintar = () => {
+        const q = lista[i];
+        vista.innerHTML = `<section class="panel">
+          <div class="barra"><span class="reloj" id="reloj">${tiempo(quedan)}</span><span class="nota">${resp.filter(r => r >= 0).length} respondidas de ${lista.length}</span></div>
+          ${tarjeta(q, `${i + 1} / ${lista.length}`)}
+          <div class="barra"><div class="acciones"><button class="sec" id="ant" type="button"${i ? "" : " disabled"}>Anterior</button><button class="sec" id="blanco" type="button">En blanco</button><button class="prim" id="sig" type="button">${i < lista.length - 1 ? "Siguiente" : "Ir al final"}</button></div>
+          <button class="sec" id="entregar" type="button">Entregar</button></div>
+          <details class="ir"><summary>Ir a una pregunta</summary><div class="rejilla">${lista.map((_, k) => `<button type="button" data-i="${k}" class="${resp[k] >= 0 ? "resp" : ""}${k === i ? " actual" : ""}">${k + 1}</button>`).join("")}</div></details>
+        </section>`;
+        const btns = [...vista.querySelectorAll("ol.ops button")];
+        if (resp[i] >= 0) btns[resp[i]].classList.add("elegida");
+        btns.forEach(b => b.addEventListener("click", () => { resp[i] = +b.dataset.k; if (i < lista.length - 1) { i++; } pintar(); }));
+        $("#ant").addEventListener("click", () => { i--; pintar(); });
+        $("#sig").addEventListener("click", () => { if (i < lista.length - 1) i++; pintar(); });
+        $("#blanco").addEventListener("click", () => { resp[i] = -1; if (i < lista.length - 1) i++; pintar(); });
+        $("#entregar").addEventListener("click", confirmar);
+        vista.querySelectorAll(".rejilla button").forEach(b => b.addEventListener("click", () => { i = +b.dataset.i; pintar(); }));
+      };
+      const confirmar = () => {
+        const sin = resp.filter(r => r < 0).length;
+        const z = $("#entregar"); if (z.dataset.seguro) return entregar();
+        z.dataset.seguro = "1"; z.textContent = sin ? `Entregar con ${sin} en blanco` : "Confirmar entrega";
+      };
+      function entregar() {
+        if (entregado) return; entregado = true; clearInterval(reloj);
+        let a = 0, f = 0;
+        lista.forEach((q, k) => { if (resp[k] < 0) return; const ok = resp[k] === q.c; ok ? a++ : f++; anotar(q.id, ok); });
+        const bruto = a - 0.25 * f, nota = Math.max(0, bruto) * 50 / lista.length;
+        est.sims.push({ fecha: new Date().toISOString().slice(0, 10), a, f, b: lista.length - a - f, nota: +nota.toFixed(2) }); guardar();
+        const porTema = {};
+        lista.forEach((q, k) => { const t = porTema[q.tema] || (porTema[q.tema] = [0, 0, 0]); t[0]++; if (resp[k] === q.c) t[1]++; else if (resp[k] >= 0) t[2]++; });
+        pantalla(`<section class="panel">${volver}<h2>Resultado</h2>
+          <div class="resumen">
+            <div class="dato"><span class="v">${nota.toFixed(2).replace(".", ",")}</span><span class="k">sobre 50 (mínimo 25)</span></div>
+            <div class="dato"><span class="v">${a}</span><span class="k">aciertos</span></div>
+            <div class="dato"><span class="v">${f}</span><span class="k">errores (−${(f * 0.25).toString().replace(".", ",")})</span></div>
+            <div class="dato"><span class="v">${lista.length - a - f}</span><span class="k">en blanco</span></div>
+          </div>
+          <p class="veredicto ${nota >= 25 ? "ok" : "mal"}">${nota >= 25 ? "Por encima del mínimo." : "Por debajo del mínimo."}</p>
+          <details><summary>Por temas</summary><div class="tabla-env"><table class="temas"><thead><tr><th>Tema</th><th class="n">Bien</th><th class="n">Mal</th><th class="n">Total</th></tr></thead><tbody>
+          ${Object.entries(porTema).sort((x, y) => y[1][0] - x[1][0]).map(([t, v]) => `<tr><td>${esc(B.temas[t] || t)}</td><td class="n">${v[1]}</td><td class="n">${v[2]}</td><td class="n">${v[0]}</td></tr>`).join("")}
+          </tbody></table></div></details>
+          <details open><summary>Corrección</summary>
+          <div class="rejilla">${lista.map((q, k) => `<button type="button" data-i="${k}" class="${resp[k] < 0 ? "" : resp[k] === q.c ? "ok" : "mal"}">${k + 1}</button>`).join("")}</div>
+          <div id="revision"></div></details>
+          <div class="acciones"><button class="prim" id="otro" type="button">Otro simulacro</button></div></section>`);
+        enlazarVolver();
+        const rev = k => {
+          const q = lista[k];
+          $("#revision").innerHTML = tarjeta(q, `${k + 1} / ${lista.length}`, `<div class="veredicto ${resp[k] < 0 ? "blanco" : resp[k] === q.c ? "ok" : "mal"}">${resp[k] < 0 ? "En blanco" : resp[k] === q.c ? "Correcta" : "Respondiste " + L[resp[k]]} · correcta: ${L[q.c]}</div><details class="fuentes"><summary>Examen</summary>${fuenteTxt(q)}</details>`);
+          const bs = [...$("#revision").querySelectorAll("ol.ops button")];
+          bs.forEach((b, j) => { b.disabled = true; if (j === q.c) b.classList.add("ok"); else if (j === resp[k]) b.classList.add("mal"); });
+        };
+        vista.querySelectorAll(".rejilla button").forEach(b => b.addEventListener("click", () => rev(+b.dataset.i)));
+        $("#otro").addEventListener("click", simulacro);
+      }
+      limpiar(); limpiar = () => clearInterval(reloj);
+      window.scrollTo(0, 0);
+      pintar();
+    }
+  }
+
+  // ---------- progreso ----------
+  function progreso() {
+    const vistas = Object.keys(est.q).length;
+    let ac = 0, tot = 0; Object.values(est.q).forEach(r => { ac += r[1]; tot += r[0]; });
+    const porTema = {};
+    Q.forEach(q => { const t = porTema[q.tema] || (porTema[q.tema] = [0, 0, 0, 0]); t[0]++; const r = est.q[q.id]; if (r) { t[1]++; t[2] += r[1]; t[3] += r[0]; } });
+    const fallos = Q.filter(q => fallada(q.id)).length;
+    pantalla(`<section class="panel">
+      ${volver}
+      <h2>Mi progreso</h2>
+      <div class="resumen">
+        <div class="dato"><span class="v">${num(vistas)}</span><span class="k">vistas de ${num(Q.length)}</span></div>
+        <div class="dato"><span class="v">${tot ? Math.round(100 * ac / tot) : 0} %</span><span class="k">aciertos</span></div>
+        <div class="dato"><span class="v">${num(fallos)}</span><span class="k">por repasar</span></div>
+        <div class="dato"><span class="v">${est.sims.length}</span><span class="k">simulacros${est.sims.length ? ` · último ${String(est.sims[est.sims.length - 1].nota).replace(".", ",")}` : ""}</span></div>
+      </div>
+      <details><summary>Por temas</summary><div class="tabla-env"><table class="temas"><thead><tr><th>Tema</th><th class="n">Vistas</th><th class="n">Aciertos</th></tr></thead><tbody>
+      ${Object.entries(porTema).sort((x, y) => y[1][0] - x[1][0]).map(([t, v]) => `<tr><td>${esc(B.temas[t] || t)}</td><td class="n">${v[1]}/${v[0]}<span class="mini" aria-hidden="true"><i style="width:${100 * v[1] / v[0]}%"></i></span></td><td class="n">${v[3] ? Math.round(100 * v[2] / v[3]) + " %" : "–"}</td></tr>`).join("")}
+      </tbody></table></div></details>
+      <div class="acciones"><button class="sec" id="borrar" type="button">Borrar mi progreso</button><span class="nota" id="borrar-nota">Se guarda solo en este dispositivo: se pierde si borras los datos del navegador, desinstalas la app o cambias de móvil.</span></div>
+    </section>`);
+    enlazarVolver();
+    $("#borrar").addEventListener("click", ev => {
+      const b = ev.currentTarget;
+      if (!b.dataset.seguro) { b.dataset.seguro = "1"; b.textContent = "Sí, borrar todo"; $("#borrar-nota").textContent = "Pulsa otra vez para confirmar."; return; }
+      est = { q: {}, sims: [], n: 0 }; guardar(); progreso();
+    });
+  }
+
+  inicio();
+})();
+</script>
+<script>
+(() => {
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+  // que el navegador no borre el progreso por falta de espacio
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+  const caja = document.getElementById("instalar");
+  const instalada = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  if (instalada) { caja.hidden = true; return; }
+  const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  document.getElementById(ios ? "i-android" : "i-ios").hidden = true;
+  let aviso = null;
+  const boton = document.getElementById("i-boton");
+  addEventListener("beforeinstallprompt", e => { e.preventDefault(); aviso = e; boton.hidden = false; });
+  boton.addEventListener("click", async () => { if (!aviso) return; aviso.prompt(); await aviso.userChoice; aviso = null; boton.hidden = true; });
+  addEventListener("appinstalled", () => { caja.hidden = true; });
+})();
+</script>
+</body>
+</html>
