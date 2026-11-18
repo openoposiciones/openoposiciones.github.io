@@ -229,7 +229,7 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
   </footer>
 </div>
 
-<script src="banco.js?v=d54129f94d"></script>
+<script src="banco.js?v=f4eca48601"></script>
 <script>
 (() => {
   const B = window.BANCO;
@@ -634,8 +634,11 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
     $("i-dentro").textContent = `La has abierto dentro de ${app === "otra app" ? "otra app" : app}: desde aquí no se puede instalar. `
       + (ios ? "Toca el menú (··· o el icono de compartir) y elige «Abrir en Safari»." : "Toca el menú ⋮ y elige «Abrir en Chrome» o «Abrir en el navegador».");
     if (android) {  // en Android, un botón que la abre directamente en Chrome
-      const a = $("i-abrir"), url = location.href.replace(/^https?:\/\//, "");
-      a.href = "intent://" + url + "#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=" + encodeURIComponent(location.href) + ";end";
+      // Solo la dirección fija y el nombre del grupo ya limpio: nada que venga tal cual de la URL (evita colar otro «#Intent;…» con un enlace preparado).
+      const g = (new URLSearchParams(location.search).get("g") || "").replace(/[^a-z0-9-]/gi, "").slice(0, 40);
+      const url = "openoposiciones.github.io/" + (g ? "?g=" + g : "");
+      $("i-abrir").href = "intent://" + url + "#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=" + encodeURIComponent("https://" + url) + ";end";
+      const a = $("i-abrir");
       a.hidden = false;
     }
   }
