@@ -94,6 +94,9 @@ button.enlace { font: 400 17px var(--f-texto); color: var(--acento); background:
 .favs { display: grid; gap: 8px; }
 button.fav { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; width: 100%; text-align: left; padding: 12px 16px; border: 0; border-radius: 12px; background: var(--relleno); color: var(--tinta); font: 400 16px/1.3 var(--f-texto); cursor: pointer; }
 button.fav .estrella { color: var(--acento); }
+.aviso-anki { background: var(--relleno); border-radius: var(--radio); padding: 12px 14px; font-size: 15px; line-height: 1.45; }
+.aviso-anki a, .aviso-anki-inicio a { color: var(--acento); text-decoration: none; font-weight: 600; }
+.aviso-anki-inicio { margin: -4px 0 4px; font-size: 14px; color: var(--tinta-2); }
 .fav-fila { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px; }
 button.fav-x { min-width: 44px; padding: 0 12px; border: 0; border-radius: 12px; background: var(--relleno); color: var(--tinta-2); font: 400 22px/1 var(--f-texto); cursor: pointer; }
 button.fav-x.seguro { background: var(--mal-suave); color: var(--mal); font: 600 15px var(--f-texto); }
@@ -219,7 +222,7 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
   
 
   <footer>
-    <div>Web independiente, sin relación con el SERMAS ni con ninguna administración. Preguntas oficiales con la respuesta de la plantilla del tribunal, sin las anuladas. Tu progreso se guarda solo en este dispositivo: <b>se borra si borras los datos del navegador o desinstalas la app</b>.</div>
+    <div>Web independiente, sin relación con el SERMAS ni con ninguna administración. Preguntas oficiales con la respuesta de la plantilla del tribunal, sin las anuladas. Tu progreso se guarda solo en este dispositivo y <b>se borra si borras los datos del navegador o desinstalas la app</b>. Para estudiar durante meses, mejor el <a href="como-funciona.html#anki">mazo de Anki</a>.</div>
     <div class="enlaces"><a href="como-funciona.html">Cómo funciona</a><a href="privacidad.html">Privacidad</a><a href="como-funciona.html#contacto">Contacto</a><a href="fisioterapia-ope-preguntas.apkg">Mazo de Anki</a></div>
     <details class="mas-info"><summary>De dónde salen las preguntas</summary>
       <p>Cuadernillos y plantillas publicados por cada administración (servicios de salud, consejerías y otras administraciones). Cada pregunta indica de qué examen sale. Respuesta según la plantilla definitiva cuando existe; si el tribunal solo publicó la provisional, se usa esa sin las anuladas que constan.</p>
@@ -229,7 +232,7 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
   </footer>
 </div>
 
-<script src="banco.js?v=f4eca48601"></script>
+<script src="banco.js?v=766d7d3ae5"></script>
 <script>
 (() => {
   const B = window.BANCO;
@@ -361,6 +364,7 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
       <p class="estado"${vistas ? "" : " hidden"}>${vistas
         ? `Llevas <b>${num(vistas)}</b> preguntas · <b>${Math.round(100 * ac / tot)} %</b> de aciertos${nt ? ` · <b>${num(nt)}</b> para repasar hoy` : ""}`
         : ""}</p>
+      <p class="aviso-anki-inicio"${vistas >= 30 ? "" : " hidden"}>Tu progreso solo está en este navegador. Para estudiar durante meses, mejor <a href="como-funciona.html#anki">el mazo de Anki</a>.</p>
       <button type="button" class="grande prim" id="estudiar">Estudiar<span>${nt ? `tus ${num(nt)} repasos de hoy y preguntas nuevas` : "primero tus fallos y lo que más cae en el SERMAS"}</span></button>
       <button type="button" class="grande sec" id="filtrar">Filtrar<span>personaliza tu estudio</span></button>
       ${favs.length ? `<div class="favs" aria-label="Filtros favoritos">${favs.map((f, i) => { const m = filtrar(f).length;
@@ -599,7 +603,8 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
       <details><summary>Por temas</summary><div class="tabla-env"><table class="temas"><thead><tr><th>Tema</th><th class="n">Vistas</th><th class="n">Aciertos</th></tr></thead><tbody>
       ${Object.entries(porTema).sort((x, y) => y[1][0] - x[1][0]).map(([t, v]) => `<tr><td>${esc(B.temas[t] || t)}</td><td class="n">${v[1]}/${v[0]}<span class="mini" aria-hidden="true"><i style="width:${100 * v[1] / v[0]}%"></i></span></td><td class="n">${v[3] ? Math.round(100 * v[2] / v[3]) + " %" : "–"}</td></tr>`).join("")}
       </tbody></table></div></details>
-      <div class="acciones"><button class="sec" id="borrar" type="button">Borrar mi progreso</button><span class="nota" id="borrar-nota">Se guarda solo en este dispositivo: se pierde si borras los datos del navegador, desinstalas la app o cambias de móvil.</span></div>
+      <div class="aviso-anki"><b>Este progreso no tiene copia.</b> Vive solo en este navegador: si borras sus datos, desinstalas la app o cambias de móvil, se pierde. Si vas a estudiar durante meses, usa el <a href="como-funciona.html#anki">mazo de Anki</a>: guarda tu progreso en tu cuenta y lo sincroniza entre dispositivos.</div>
+      <div class="acciones"><button class="sec" id="borrar" type="button">Borrar mi progreso</button><span class="nota" id="borrar-nota"></span></div>
     </section>`);
     enlazarVolver();
     $("#borrar").addEventListener("click", ev => {
