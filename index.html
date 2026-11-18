@@ -90,6 +90,15 @@ button.grande.sec:active { background: var(--relleno-2); }
 .mas { display: flex; flex-wrap: wrap; gap: 4px 22px; margin: 8px 0 0; }
 button.enlace { font: 400 17px var(--f-texto); color: var(--acento); background: none; border: 0; padding: 6px 0; cursor: pointer; }
 .volver { justify-self: start; margin-left: -2px; }
+/* filtros favoritos */
+.favs { display: grid; gap: 8px; }
+button.fav { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; width: 100%; text-align: left; padding: 12px 16px; border: 0; border-radius: 12px; background: var(--relleno); color: var(--tinta); font: 400 16px/1.3 var(--f-texto); cursor: pointer; }
+button.fav .estrella { color: var(--acento); }
+button.fav .fav-c { color: var(--tinta-2); font-size: 15px; font-variant-numeric: tabular-nums; }
+.lista-favs { display: grid; gap: 2px; }
+.fila-fav { display: flex; justify-content: space-between; gap: 12px; align-items: center; border-bottom: 1px solid var(--linea); }
+.fila-fav .cargar { text-align: left; color: var(--tinta); }
+.fila-fav .quitar { color: var(--mal); flex: none; }
 
 /* botones normales */
 .acciones { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
@@ -214,7 +223,7 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
   </footer>
 </div>
 
-<script src="banco.js?v=04fcfa5ebf"></script>
+<script src="banco.js?v=cd90322f45"></script>
 <script>
 (() => {
   const B = window.BANCO;
@@ -284,34 +293,38 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
   $("#cifras").innerHTML = `<span class="objetivo">OPE SERMAS 2026</span><span>${num(Q.length)} preguntas oficiales</span>`;
   $("#generado").textContent = `Banco generado el ${new Date(B.generado).toLocaleDateString("es", { day: "numeric", month: "long", year: "numeric" })}.`;
 
-  // ---------- filtros (se guardan y se aplican a Estudiar y al simulacro) ----------
+  // ---------- filtros: solo para estudiar desde «Filtrar» o desde un favorito (Estudiar, al azar y el simulacro usan todo el banco) ----------
   const SIN_FILTRO = { tema: "", org: "", desde: ANIOS[0], hasta: ANIOS[ANIOS.length - 1], texto: "", nuevas: false, fallos: false, general: true };
-  let filtro = { ...SIN_FILTRO };
+  let filtro = { ...SIN_FILTRO };   // el que se está editando en «Filtrar» (se recuerda)
   try { Object.assign(filtro, JSON.parse(localStorage.getItem(CLAVE + "-f") || "{}")); } catch (e) {}
   const guardarFiltro = () => { try { localStorage.setItem(CLAVE + "-f", JSON.stringify(filtro)); } catch (e) {} };
-  const filtrar = () => {
-    const t = norm(filtro.texto.trim());
+  let favs = [];                    // filtros favoritos: [{...filtro}]
+  try { favs = JSON.parse(localStorage.getItem(CLAVE + "-fav") || "[]"); } catch (e) {}
+  const guardarFavs = () => { try { localStorage.setItem(CLAVE + "-fav", JSON.stringify(favs)); } catch (e) {} };
+  const mismo = (a, b) => Object.keys(SIN_FILTRO).every(k => String(a[k]).trim() === String(b[k]).trim());
+  const filtrar = (f = filtro) => {
+    const t = norm(f.texto.trim());
     return Q.filter(q => {
-      if (filtro.tema && q.tema !== filtro.tema) return false;
-      if (!filtro.general && q.gen) return false;
-      if (filtro.nuevas && est.q[q.id]) return false;
-      if (filtro.fallos && !fallada(q.id)) return false;
+      if (f.tema && q.tema !== f.tema) return false;
+      if (!f.general && q.gen) return false;
+      if (f.nuevas && est.q[q.id]) return false;
+      if (f.fallos && !fallada(q.id)) return false;
       const exs = q.f.map(([i]) => EX[i]);
-      if (filtro.org && !exs.some(e => e.org === filtro.org)) return false;
-      if (!exs.some(e => !e.anio || (e.anio >= filtro.desde && e.anio <= filtro.hasta))) return false;
+      if (f.org && !exs.some(e => e.org === f.org)) return false;
+      if (!exs.some(e => !e.anio || (e.anio >= f.desde && e.anio <= f.hasta))) return false;
       if (t && !norm(q.en + " " + q.op.join(" ") + " " + q.caso).includes(t)) return false;
       return true;
     });
   };
-  const activos = () => {
+  const activos = (f = filtro) => {
     const a = [];
-    if (filtro.tema) a.push(B.temas[filtro.tema] || filtro.tema);
-    if (filtro.org) a.push(filtro.org);
-    if (filtro.desde !== SIN_FILTRO.desde || filtro.hasta !== SIN_FILTRO.hasta) a.push(filtro.desde === filtro.hasta ? filtro.desde : `${filtro.desde}–${filtro.hasta}`);
-    if (filtro.texto.trim()) a.push(`«${filtro.texto.trim()}»`);
-    if (filtro.nuevas) a.push("solo nuevas");
-    if (filtro.fallos) a.push("solo mis fallos");
-    if (!filtro.general) a.push("sin parte general");
+    if (f.tema) a.push(B.temas[f.tema] || f.tema);
+    if (f.org) a.push(f.org);
+    if (f.desde !== SIN_FILTRO.desde || f.hasta !== SIN_FILTRO.hasta) a.push(f.desde === f.hasta ? f.desde : `${f.desde}–${f.hasta}`);
+    if (f.texto.trim()) a.push(`«${f.texto.trim()}»`);
+    if (f.nuevas) a.push("solo nuevas");
+    if (f.fallos) a.push("solo mis fallos");
+    if (!f.general) a.push("sin parte general");
     return a;
   };
   const opciones = (vals, sel, todos) => (todos ? `<option value="">${todos}</option>` : "") + vals.map(([v, t]) => `<option value="${esc(v)}"${v === sel ? " selected" : ""}>${esc(t)}</option>`).join("");
@@ -338,18 +351,20 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
     const vistas = Object.keys(est.q).length;
     let ac = 0, tot = 0; Object.values(est.q).forEach(r => { ac += r[1]; tot += r[0]; });
     const nt = Q.filter(q => toca(q.id)).length;
-    const a = activos(), n = filtrar().length;
     pantalla(`<section class="panel inicio">
       <p class="estado"${vistas ? "" : " hidden"}>${vistas
         ? `Llevas <b>${num(vistas)}</b> preguntas · <b>${Math.round(100 * ac / tot)} %</b> de aciertos${nt ? ` · <b>${num(nt)}</b> para repasar hoy` : ""}`
         : ""}</p>
-      <button type="button" class="grande prim" id="estudiar"${n ? "" : " disabled"}>Estudiar<span>${a.length ? `${num(n)} preguntas con tus filtros` : nt ? `tus ${num(nt)} repasos de hoy y preguntas nuevas` : "primero lo que más cae en SERMAS, y tus fallos"}</span></button>
-      <button type="button" class="grande sec" id="filtrar">Filtrar<span>${a.length ? esc(a.join(" · ")) : "tema, convocatoria, año o palabra"}</span></button>
+      <button type="button" class="grande prim" id="estudiar">Estudiar<span>${nt ? `tus ${num(nt)} repasos de hoy y preguntas nuevas` : "primero lo que más cae en SERMAS, y tus fallos"}</span></button>
+      <button type="button" class="grande sec" id="filtrar">Filtrar<span>tema, convocatoria, año o palabra</span></button>
+      ${favs.length ? `<div class="favs" aria-label="Filtros favoritos">${favs.map((f, i) => { const m = filtrar(f).length;
+        return `<button type="button" class="fav" data-i="${i}"${m ? "" : " disabled"}><span class="estrella" aria-hidden="true">★</span><span class="fav-n">${esc(activos(f).join(" · "))}</span><span class="fav-c">${num(m)}</span></button>`; }).join("")}</div>` : ""}
       <p class="mas"><button type="button" class="enlace" id="ir-azar">Estudiar al azar</button><button type="button" class="enlace" id="ir-sim">Simulacro de examen</button><button type="button" class="enlace" id="ir-prog">Mi progreso</button></p>
     </section>`);
     $("#estudiar").addEventListener("click", () => estudiar());
     $("#ir-azar").addEventListener("click", () => estudiar(true));
     $("#filtrar").addEventListener("click", filtrarVista);
+    vista.querySelectorAll(".fav").forEach(b => b.addEventListener("click", () => estudiar(false, favs[+b.dataset.i])));
     $("#ir-sim").addEventListener("click", simulacro);
     $("#ir-prog").addEventListener("click", progreso);
   }
@@ -370,15 +385,26 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
         <label><input type="checkbox" id="f-fallos"${filtro.fallos ? " checked" : ""}> Solo mis fallos</label>
         <label><input type="checkbox" id="f-general"${filtro.general ? " checked" : ""}> Parte general (Madrid)</label>
       </div>
-      <div class="acciones"><button class="prim" id="f-ir" type="button"></button><button class="sec" id="f-quitar" type="button">Quitar filtros</button></div>
+      <button class="prim ancho" id="f-ir" type="button"></button>
+      <div class="acciones"><button class="sec" id="f-fav" type="button"></button><button class="sec" id="f-quitar" type="button">Quitar filtros</button></div>
+      ${favs.length ? `<div class="campo">Tus favoritos<div class="lista-favs">${favs.map((f, i) => `<div class="fila-fav"><button type="button" class="enlace cargar" data-i="${i}">★ ${esc(activos(f).join(" · "))}</button><button type="button" class="enlace quitar" data-i="${i}" aria-label="Quitar de favoritos">Quitar</button></div>`).join("")}</div></div>` : ""}
     </section>`);
     enlazarVolver();
     const act = () => {
-      const m = filtrar().length;
+      const m = filtrar().length, hay = activos().length, i = favs.findIndex(f => mismo(f, filtro));
       $("#f-ir").textContent = m ? `Estudiar ${num(m)} preguntas` : "Ninguna pregunta: quita algún filtro";
       $("#f-ir").disabled = !m;
-      $("#f-quitar").hidden = !activos().length;
+      $("#f-quitar").hidden = !hay;
+      $("#f-fav").hidden = !hay;
+      $("#f-fav").textContent = i >= 0 ? "★ En favoritos" : "☆ Guardar en favoritos";
     };
+    $("#f-fav").addEventListener("click", () => {
+      const i = favs.findIndex(f => mismo(f, filtro));
+      if (i >= 0) favs.splice(i, 1); else favs.push({ ...filtro });
+      guardarFavs(); filtrarVista();
+    });
+    vista.querySelectorAll(".cargar").forEach(b => b.addEventListener("click", () => { filtro = { ...SIN_FILTRO, ...favs[+b.dataset.i] }; guardarFiltro(); filtrarVista(); }));
+    vista.querySelectorAll(".quitar").forEach(b => b.addEventListener("click", () => { favs.splice(+b.dataset.i, 1); guardarFavs(); filtrarVista(); }));
     const leer = () => {
       filtro.tema = $("#f-tema").value; filtro.org = $("#f-org").value; filtro.desde = $("#f-desde").value; filtro.hasta = $("#f-hasta").value;
       if (filtro.desde > filtro.hasta) { filtro.hasta = filtro.desde; $("#f-hasta").value = filtro.hasta; }
@@ -387,7 +413,7 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
     };
     ["#f-tema", "#f-org", "#f-desde", "#f-hasta", "#f-nuevas", "#f-fallos", "#f-general"].forEach(s => $(s).addEventListener("change", leer));
     $("#f-texto").addEventListener("input", leer);
-    $("#f-ir").addEventListener("click", () => estudiar());
+    $("#f-ir").addEventListener("click", () => estudiar(false, { ...filtro }));
     $("#f-quitar").addEventListener("click", () => { filtro = { ...SIN_FILTRO }; guardarFiltro(); filtrarVista(); });
     act();
   }
@@ -396,8 +422,9 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
   // Orden: 1) fallos que ya pueden volver (a las ~10 preguntas); 2) repasos de hoy, mezclados con nuevas (2 de cada 3, repaso);
   // 3) nuevas, de más a menos relevantes; 4) sin nada pendiente, las que peor llevas.
   // alAzar: las nuevas y los repasos salen al azar, sin el orden de relevancia.
-  function estudiar(alAzar = false) {
-    const pool = barajar(filtrar()).sort((a, b) => b.rel - a.rel);
+  // f: filtro de la sesión (desde «Filtrar» o un favorito); sin él, todo el banco.
+  function estudiar(alAzar = false, f = SIN_FILTRO) {
+    const pool = barajar(filtrar(f)).sort((a, b) => b.rel - a.rel);
     if (!pool.length) return inicio();
     const recientes = [];
     let hechas = 0, aciertos = 0;
@@ -406,11 +433,11 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
       const R = q => est.q[q.id];
       const libre = q => !recientes.includes(q.id);
       const nuevaSig = () => { const c = pool.filter(q => !R(q) && libre(q)); return !c.length ? null : alAzar ? azar(c) : c[0]; };
-      if (filtro.nuevas) return nuevaSig();
+      if (f.nuevas) return nuevaSig();
       const fallos = pool.filter(q => R(q) && R(q)[2] > 0);
       const listos = fallos.filter(q => libre(q) && n >= (R(q)[6] || 0));
       if (listos.length) return listos.sort((a, b) => R(a)[6] - R(b)[6])[0];
-      if (filtro.fallos) { const l = fallos.filter(libre); return fallos.length ? azar(l.length ? l : fallos) : null; }
+      if (f.fallos) { const l = fallos.filter(libre); return fallos.length ? azar(l.length ? l : fallos) : null; }
       const repasos = pool.filter(q => libre(q) && R(q) && R(q)[2] === 0 && R(q)[4] <= hoy);
       const nueva = nuevaSig();
       if (repasos.length && (!nueva || Math.random() < 2 / 3)) return alAzar ? azar(repasos) : repasos.sort((a, b) => R(a)[4] - R(b)[4] || b.rel - a.rel)[0];
@@ -424,7 +451,7 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
       pantalla(`<section class="panel">
         <h2>${hechas ? "Buen trabajo" : "Sin respuestas"}</h2>
         ${hechas ? `<div class="resumen"><div class="dato"><span class="v">${aciertos}/${hechas}</span><span class="k">aciertos</span></div><div class="dato"><span class="v">${Math.round(100 * aciertos / hechas)} %</span><span class="k">en esta sesión</span></div></div>` : ""}
-        ${filtro.nuevas || filtro.fallos ? `<p class="nota">${filtro.fallos ? "Ya no te quedan fallos con estos filtros." : "Ya has visto todas las preguntas con estos filtros."}</p>` : ""}
+        ${f.nuevas || f.fallos ? `<p class="nota">${f.fallos ? "Ya no te quedan fallos con estos filtros." : "Ya has visto todas las preguntas con estos filtros."}</p>` : ""}
         <div class="acciones"><button class="prim" id="otra" type="button">Inicio</button></div></section>`);
       $("#otra").addEventListener("click", inicio);
     };
@@ -467,17 +494,14 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
 
   // ---------- simulacro ----------
   function simulacro() {
-    const a = activos();
     pantalla(`<section class="panel">
       ${volver}
       <h2>Simulacro de examen</h2>
-      <p class="nota">100 preguntas al azar · 120 min · +1 acierto, −0,25 error. Nota sobre 50 (mínimo 25), como en SERMAS. Las respuestas se ven al entregar.${a.length ? `<br>Con tus filtros: ${esc(a.join(" · "))}.` : ""}</p>
+      <p class="nota">100 preguntas al azar · 120 min · +1 acierto, −0,25 error. Nota sobre 50 (mínimo 25), como en SERMAS. De todo el banco. Las respuestas se ven al entregar.</p>
       <div class="acciones"><button class="prim" id="empezar" type="button">Empezar</button><span class="nota" id="n-sel"></span></div>
     </section>`);
     enlazarVolver();
-    const m = filtrar().length;
-    if (m < 100) { $("#n-sel").textContent = `Con tus filtros hay ${num(m)}: hacen falta 100.`; $("#empezar").disabled = true; }
-    $("#empezar").addEventListener("click", () => correr(barajar(filtrar()).slice(0, 100)));
+    $("#empezar").addEventListener("click", () => correr(barajar(Q).slice(0, 100)));
 
     function correr(lista) {
       const resp = new Array(lista.length).fill(-1);
