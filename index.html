@@ -214,7 +214,7 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
   </footer>
 </div>
 
-<script src="banco.js?v=dcdf625b54"></script>
+<script src="banco.js?v=04fcfa5ebf"></script>
 <script>
 (() => {
   const B = window.BANCO;
@@ -246,14 +246,32 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
   let est = { q: {}, sims: [], n: 0 };
   try { est = Object.assign(est, JSON.parse(localStorage.getItem(CLAVE) || "{}")); } catch (e) {}
   const guardar = () => { try { localStorage.setItem(CLAVE, JSON.stringify(est)); } catch (e) {} };
+  // Repaso espaciado por días (como Anki, simplificado). Cada pregunta vista guarda:
+  // [vistas, aciertos, fallos seguidos, nº de respuesta de la última vez, día en que toca repasarla, intervalo en días, nº de respuesta a partir de la que vuelve un fallo]
+  // Fallo: vuelve a las ~10 preguntas; al acertarla, mañana. Acierto: 3 días la primera vez y después 7, 30, 90, 180… días.
+  const HOY = () => Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 86400000);
+  const ESCALERA = [1, 3, 7, 30, 90, 180];
+  Object.values(est.q).forEach(r => { if (r.length < 7) { const f = r[2] > 0; r[3] = r[3] || 0; r[4] = HOY() + (f ? 0 : 3); r[5] = f ? 0 : 3; r[6] = 0; } }); // progreso de antes
   const anotar = (id, ok) => {
-    const r = est.q[id] || (est.q[id] = [0, 0, 0, 0]); // [vistas, aciertos, fallos seguidos, nº de respuesta de la última vez]
+    const nueva = !est.q[id];
+    const r = est.q[id] || (est.q[id] = [0, 0, 0, 0, 0, 0, 0]);
     est.n = (est.n || 0) + 1;
-    r[0]++; if (ok) { r[1]++; r[2] = 0; } else { r[2]++; }
+    r[0]++;
+    if (ok) {
+      r[1]++;
+      const deFallo = r[2] > 0, antes = r[5] || 0;
+      r[2] = 0;
+      r[5] = deFallo ? 1 : nueva ? 3 : (ESCALERA.find(d => d > antes) || antes * 2);
+      r[4] = HOY() + r[5];
+    } else {
+      r[2]++; r[5] = 0; r[4] = HOY() + 1; r[6] = est.n + 10;
+    }
     r[3] = est.n;
     guardar();
   };
   const fallada = id => est.q[id] && est.q[id][2] > 0;
+  // le toca hoy: un fallo que ya puede volver o un repaso con fecha de hoy o anterior
+  const toca = id => { const r = est.q[id]; return !!r && (r[2] > 0 ? (est.n || 0) >= (r[6] || 0) : r[4] <= HOY()); };
 
   // ---------- utilidades ----------
   const fuenteTxt = q => q.f.map(([i, n]) => { const e = EX[i]; return `${esc(e.serv)} · ${esc(e.fecha)}${e.turno && e.turno !== "-" ? " · " + esc(e.turno) : ""} · pregunta ${n}`; }).join("<br>");
@@ -319,13 +337,13 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
   function inicio() {
     const vistas = Object.keys(est.q).length;
     let ac = 0, tot = 0; Object.values(est.q).forEach(r => { ac += r[1]; tot += r[0]; });
-    const nf = Q.filter(q => fallada(q.id)).length;
+    const nt = Q.filter(q => toca(q.id)).length;
     const a = activos(), n = filtrar().length;
     pantalla(`<section class="panel inicio">
       <p class="estado"${vistas ? "" : " hidden"}>${vistas
-        ? `Llevas <b>${num(vistas)}</b> preguntas · <b>${Math.round(100 * ac / tot)} %</b> de aciertos${nf ? ` · ${num(nf)} por repasar` : ""}`
+        ? `Llevas <b>${num(vistas)}</b> preguntas · <b>${Math.round(100 * ac / tot)} %</b> de aciertos${nt ? ` · <b>${num(nt)}</b> para repasar hoy` : ""}`
         : ""}</p>
-      <button type="button" class="grande prim" id="estudiar"${n ? "" : " disabled"}>Estudiar<span>${a.length ? `${num(n)} preguntas con tus filtros` : "primero lo que más cae en SERMAS, y tus fallos"}</span></button>
+      <button type="button" class="grande prim" id="estudiar"${n ? "" : " disabled"}>Estudiar<span>${a.length ? `${num(n)} preguntas con tus filtros` : nt ? `tus ${num(nt)} repasos de hoy y preguntas nuevas` : "primero lo que más cae en SERMAS, y tus fallos"}</span></button>
       <button type="button" class="grande sec" id="filtrar">Filtrar<span>${a.length ? esc(a.join(" · ")) : "tema, convocatoria, año o palabra"}</span></button>
       <p class="mas"><button type="button" class="enlace" id="ir-azar">Estudiar al azar</button><button type="button" class="enlace" id="ir-sim">Simulacro de examen</button><button type="button" class="enlace" id="ir-prog">Mi progreso</button></p>
     </section>`);
@@ -375,24 +393,31 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
   }
 
   // ---------- estudiar: preguntas sin fin ----------
-  // Primero las más preguntadas que no has visto; cada pocas, una que fallaste hace un rato; cuando ya las has visto todas, las que peor llevas.
-  // alAzar: cualquier pregunta del banco (con los filtros), sin el orden de relevancia
+  // Orden: 1) fallos que ya pueden volver (a las ~10 preguntas); 2) repasos de hoy, mezclados con nuevas (2 de cada 3, repaso);
+  // 3) nuevas, de más a menos relevantes; 4) sin nada pendiente, las que peor llevas.
+  // alAzar: las nuevas y los repasos salen al azar, sin el orden de relevancia.
   function estudiar(alAzar = false) {
     const pool = barajar(filtrar()).sort((a, b) => b.rel - a.rel);
     if (!pool.length) return inicio();
     const recientes = [];
     let hechas = 0, aciertos = 0;
     const siguiente = () => {
+      const hoy = HOY(), n = est.n || 0;
+      const R = q => est.q[q.id];
       const libre = q => !recientes.includes(q.id);
-      const toca = q => fallada(q.id) && libre(q) && (est.n || 0) - (est.q[q.id][3] || 0) >= 6;
-      if (!filtro.fallos && Math.random() < 0.3) { const f = pool.filter(toca); if (f.length) return azar(f); }
-      if (alAzar) { const c = pool.filter(q => libre(q) && (!filtro.nuevas || !est.q[q.id]) && (!filtro.fallos || fallada(q.id))); return c.length ? azar(c) : null; }
-      const nueva = pool.find(q => !est.q[q.id] && libre(q));
+      const nuevaSig = () => { const c = pool.filter(q => !R(q) && libre(q)); return !c.length ? null : alAzar ? azar(c) : c[0]; };
+      if (filtro.nuevas) return nuevaSig();
+      const fallos = pool.filter(q => R(q) && R(q)[2] > 0);
+      const listos = fallos.filter(q => libre(q) && n >= (R(q)[6] || 0));
+      if (listos.length) return listos.sort((a, b) => R(a)[6] - R(b)[6])[0];
+      if (filtro.fallos) { const l = fallos.filter(libre); return fallos.length ? azar(l.length ? l : fallos) : null; }
+      const repasos = pool.filter(q => libre(q) && R(q) && R(q)[2] === 0 && R(q)[4] <= hoy);
+      const nueva = nuevaSig();
+      if (repasos.length && (!nueva || Math.random() < 2 / 3)) return alAzar ? azar(repasos) : repasos.sort((a, b) => R(a)[4] - R(b)[4] || b.rel - a.rel)[0];
       if (nueva) return nueva;
-      if (filtro.nuevas) return null;
       const resto = pool.filter(libre);
-      if (!resto.length) return filtro.fallos ? null : azar(pool);
-      const acierto = q => { const r = est.q[q.id]; return r ? r[1] / r[0] : 0; };
+      if (!resto.length) return azar(pool);
+      const acierto = q => { const r = R(q); return r ? r[1] / r[0] : 0; };
       return azar(barajar(resto).sort((a, b) => acierto(a) - acierto(b)).slice(0, 40));
     };
     const final = () => {
@@ -406,9 +431,9 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
     const pintar = () => {
       const q = siguiente();
       if (!q) return final();
-      recientes.push(q.id); if (recientes.length > 25) recientes.shift();
+      recientes.push(q.id); if (recientes.length > 8) recientes.shift();
       const r = est.q[q.id];
-      const marca = !r ? "Nueva" : r[2] > 0 ? "La fallaste" : "Repaso";
+      const marca = !r ? "Nueva" : r[2] > 0 ? "La fallaste" : r[4] <= HOY() ? "Repaso" : "Repaso adelantado";
       pantalla(`<section class="panel">
         <div class="barra"><button type="button" class="enlace" id="terminar">← Terminar</button><span class="nota">${hechas ? `${aciertos} de ${hechas} bien` : ""}</span></div>
         ${tarjeta(q, marca, `<div id="tras" hidden></div>`)}
@@ -526,14 +551,14 @@ footer .enlaces { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px
     let ac = 0, tot = 0; Object.values(est.q).forEach(r => { ac += r[1]; tot += r[0]; });
     const porTema = {};
     Q.forEach(q => { const t = porTema[q.tema] || (porTema[q.tema] = [0, 0, 0, 0]); t[0]++; const r = est.q[q.id]; if (r) { t[1]++; t[2] += r[1]; t[3] += r[0]; } });
-    const fallos = Q.filter(q => fallada(q.id)).length;
+    const fallos = Q.filter(q => toca(q.id)).length;
     pantalla(`<section class="panel">
       ${volver}
       <h2>Mi progreso</h2>
       <div class="resumen">
         <div class="dato"><span class="v">${num(vistas)}</span><span class="k">vistas de ${num(Q.length)}</span></div>
         <div class="dato"><span class="v">${tot ? Math.round(100 * ac / tot) : 0} %</span><span class="k">aciertos</span></div>
-        <div class="dato"><span class="v">${num(fallos)}</span><span class="k">por repasar</span></div>
+        <div class="dato"><span class="v">${num(fallos)}</span><span class="k">para repasar hoy</span></div>
         <div class="dato"><span class="v">${est.sims.length}</span><span class="k">simulacros${est.sims.length ? ` · último ${String(est.sims[est.sims.length - 1].nota).replace(".", ",")}` : ""}</span></div>
       </div>
       <details><summary>Por temas</summary><div class="tabla-env"><table class="temas"><thead><tr><th>Tema</th><th class="n">Vistas</th><th class="n">Aciertos</th></tr></thead><tbody>
