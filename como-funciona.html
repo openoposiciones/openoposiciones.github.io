@@ -4,19 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://openoposiciones.goatcounter.com/count; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://openoposiciones.goatcounter.com/count; font-src 'self'; connect-src 'self' https://openoposiciones-sinc.openoposiciones-sinc.workers.dev; manifest-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 
 <title>Cómo funciona · OpenOposiciones</title>
+<script>try { const t = localStorage.getItem("banco-fisio-ope-v1-tema"); if (t === "dark" || t === "light") document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <style>
-:root { --papel: #ffffff; --tinta: #1c1c1e; --tinta-2: #6e6e73; --acento: #1a8a4a; color-scheme: light; }
-@media (prefers-color-scheme: dark) { :root { --papel: #000000; --tinta: #f5f5f7; --tinta-2: #98989f; --acento: #34c46d; color-scheme: dark; } }
+:root { --papel: #ffffff; --tinta: #1c1c1e; --tinta-2: #6e6e73; --acento: #3d6fa6; color-scheme: light; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --papel: #000000; --tinta: #f5f5f7; --tinta-2: #98989f; --acento: #8fb3dc; color-scheme: dark; } }
+:root[data-theme="dark"] { --papel: #000000; --tinta: #f5f5f7; --tinta-2: #98989f; --acento: #8fb3dc; color-scheme: dark; }
 body { margin: 0; background: var(--papel); color: var(--tinta); -webkit-font-smoothing: antialiased;
   font: 17px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   padding: max(24px, env(safe-area-inset-top, 0px)) max(20px, env(safe-area-inset-right, 0px)) 48px max(20px, env(safe-area-inset-left, 0px)); }
 main { max-width: 36rem; margin: 0 auto; }
-h1 { font-size: 30px; line-height: 1.15; letter-spacing: -.02em; margin: 8px 0 16px; }
-h2 { font-size: 19px; margin: 28px 0 6px; }
+h1 { font-size: 30px; font-weight: 600; line-height: 1.15; letter-spacing: -.02em; margin: 8px 0 16px; }
+h2 { font-size: 19px; font-weight: 600; margin: 28px 0 6px; }
+b, strong { font-weight: 500; }
 a { color: var(--acento); text-decoration: none; }
 .nota { color: var(--tinta-2); font-size: 14px; }
 ul, ol { padding-left: 1.3em; } li { margin: 4px 0; }
@@ -27,7 +30,7 @@ ul, ol { padding-left: 1.3em; } li { margin: 4px 0; }
 <p><a href="./">← Volver a las preguntas</a></p>
 <h1>Cómo funciona</h1>
 
-<p>OpenOposiciones es un test gratuito para preparar la <b>OPE de Fisioterapia del SERMAS 2026</b> con preguntas de exámenes oficiales. Sin registro y sin anuncios.</p>
+<p>OpenOposiciones es un test gratuito para preparar la <b>OPE de Fisioterapia del SERMAS 2026</b> con preguntas de exámenes oficiales. Sin anuncios. La cuenta es opcional y sin datos personales.</p>
 
 <h2>De dónde salen las preguntas</h2>
 <ul>
@@ -56,28 +59,33 @@ ul, ol { padding-left: 1.3em; } li { margin: 4px 0; }
   <li>Si la <b>aciertas</b>, vuelve a los 3 días; si la vuelves a acertar, a la semana, al mes, a los 3 meses y a los 6 meses. Si fallas un repaso, empieza de nuevo.</li>
   <li>Primero salen los fallos que ya pueden volver; después, los repasos de hoy mezclados con preguntas nuevas (de más a menos relevantes). Cuando no queda nada pendiente, adelanta las que peor llevas.</li>
   </ul></li>
-<li><b>Estudiar al azar</b>: igual, pero las nuevas y los repasos salen al azar, sin orden de relevancia.</li>
-<li><b>Filtrar</b>: tema, convocatoria, años, una palabra, solo nuevas o solo tus fallos. Estudias solo esas preguntas, con el mismo repaso espaciado. Guárdalo en <b>favoritos</b> para tenerlo en el inicio. Estudiar, Estudiar al azar y el simulacro usan siempre todo el banco.</li>
-<li><b>Simulacro</b>: 100 preguntas al azar, 120 minutos, +1 por acierto y −0,25 por error; nota sobre 50 con el mínimo de 25, como en el SERMAS.</li>
+<li><b>Estudiar al azar</b>: igual, pero las nuevas y los repasos salen al azar, sin orden de relevancia. Es lo recomendado si no tienes cuenta: cada sesión es variada aunque no se guarde el progreso.</li>
+<li><b>Filtrar</b>: tema, convocatoria, años, una palabra, solo nuevas o solo tus fallos. Estudias solo esas preguntas, con el mismo repaso espaciado. Guárdalo en <b>favoritos</b> para tenerlo en el inicio. Estudiar y Estudiar al azar usan siempre todo el banco.</li>
 <li>Los temas se asignan automáticamente por palabras clave: alguna pregunta puede estar en un tema que no es el suyo.</li>
 </ul>
 
 <h2>Dónde se guarda tu progreso</h2>
+<p>Por cada pregunta se guarda cuántas veces la has visto, acertado y fallado, y también tus filtros. Puedes usar la web de dos formas:</p>
 <ul>
-<li><b>Solo en tu dispositivo</b>, en el almacenamiento del navegador: por cada pregunta, cuántas veces la has visto, acertado y fallado; tus simulacros y tus filtros.</li>
-<li>No se envía a ningún sitio. No hay cuentas ni cookies: nadie, tampoco quien hizo la web, puede ver quién entra ni cómo le va. Solo se cuenta cuántas visitas hay, sin saber de quién (ver Privacidad).</li>
-<li><b>Se borra si borras los datos del navegador, desinstalas la app o cambias de móvil.</b> No se sincroniza entre dispositivos.</li>
-<li>En iPhone, instálala (Compartir → «Añadir a pantalla de inicio») y úsala siempre desde el icono: Safari y la app guardan el progreso por separado, y Safari lo borra si no entras en 7 días.</li>
+<li><b>Sin cuenta</b>: todo se queda <b>solo en tu dispositivo</b>, en el almacenamiento del navegador, y no se envía a ningún sitio. <b>Se borra si borras los datos del navegador, desinstalas la app o cambias de móvil.</b></li>
+<li><b>Con cuenta</b> (opcional y gratis): se guarda además en el servidor de la web, sin que nadie más pueda verlo. No se pierde y lo tienes en el móvil y en el ordenador. Más abajo, <a href="#cuenta">cómo funciona</a>.</li>
+<li>No hay cookies ni publicidad. Solo se cuenta cuántas visitas hay, sin saber de quién (ver Privacidad).</li>
+<li>En iPhone, instálala (Compartir → «Añadir a pantalla de inicio») y úsala siempre desde el icono: Safari y la app guardan el progreso por separado, y Safari lo borra si no entras en 7 días. Con una cuenta, lo recuperas al entrar.</li>
 </ul>
 <p>Más detalles en <a href="privacidad.html">Privacidad y aviso legal</a>.</p>
 
-<h2 id="anki">Para estudiar durante meses: el mazo de Anki</h2>
-<p>Esta web es cómoda para empezar y para repasar en cualquier sitio, pero <b>tu progreso no tiene copia</b>: se pierde si se borran los datos del navegador. Si vas a prepararte en serio, usa el <b>mazo de Anki</b> con las mismas 6.407 preguntas:</p>
+<h2 id="cuenta">Guarda tu progreso: cuenta opcional</h2>
+<p>Si vas a prepararte durante meses, crea una cuenta: tu progreso <b>no se pierde</b> y lo usas <b>en todos tus dispositivos</b>.</p>
 <ul>
-<li>Guarda tu progreso en tu cuenta gratuita de AnkiWeb y lo <b>sincroniza</b> entre el móvil y el ordenador.</li>
-<li>Repaso espaciado completo: cada pregunta vuelve justo cuando estás a punto de olvidarla.</li>
-<li>Gratis en Android (AnkiDroid), en el ordenador (Anki) y en el navegador (AnkiWeb). En iPhone, la app AnkiMobile es de pago.</li>
+<li><b>Cómo</b>: en la web, <a href="./#cuenta">Mi cuenta</a> → «Crear cuenta», con un usuario que te inventes y una contraseña. En tu otro dispositivo, «Mi cuenta» → «Ya tengo cuenta». Tu progreso se guarda solo, sin que tengas que hacer nada.</li>
+<li><b>Sin datos personales</b>: no se pide email, ni tu nombre, ni nada más. Inventa un usuario que no te identifique.</li>
+<li><b>Privado</b>: tu progreso queda protegido con tu contraseña. Solo tú puedes verlo, ni siquiera quien hace esta web.</li>
+<li><b>Si olvidas la contraseña</b>: usa el <b>código de recuperación</b> que te damos al crear la cuenta (guárdalo bien), o cámbiala desde otro dispositivo donde ya hayas entrado. Sin ninguna de las dos cosas no se puede recuperar, porque nadie más tiene tu clave; lo que tengas en cada dispositivo se conserva.</li>
+<li>Puedes cerrar sesión o borrar tu cuenta cuando quieras desde «Mi cuenta». Las cuentas sin usar en 2 años se borran.</li>
 </ul>
+
+<h2 id="anki">También en Anki</h2>
+<p>Si ya usas <b>Anki</b>, tienes las mismas 6.407 preguntas en un mazo, con su propio repaso espaciado y su sincronización con AnkiWeb. Gratis en Android (AnkiDroid), en el ordenador (Anki) y en el navegador (AnkiWeb); en iPhone, la app AnkiMobile es de pago. El progreso de Anki y el de esta web van por separado.</p>
 <p><a href="fisioterapia-ope-preguntas.apkg"><b>Descargar el mazo de Anki</b></a> (10 MB) y ábrelo con Anki.</p>
 
 <h2>Avisos</h2>
